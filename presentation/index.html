@@ -10,7 +10,7 @@
 :root{
   --or:#BE4F23; --or2:#E0703F; --or3:#F3B08F; --orbg:rgba(190,79,35,.14);
   --ink:#1B1B1A; --ink2:#262625; --ink3:#3D3D3C; --line:#4a4a48;
-  --tx:#F4F1EE; --tx2:#B9B4AF; --tx3:#85807B; --ok:#7FB98A;
+  --tx:#F4F1EE; --tx2:#B9B4AF; --tx3:#85807B; --ok:#3E9B5F;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#0f0f0e;color:var(--tx);font-family:Inter,system-ui,sans-serif;overflow:hidden}
@@ -131,7 +131,7 @@ pre.code .c{color:#7d7873;font-style:italic}.code .k{color:var(--or2)}.code .s{c
 .chipcard{text-align:left}
 .chipcard .spec{display:flex;justify-content:space-between;border-bottom:1px dashed rgba(255,255,255,.1);padding:9px 0;font-size:19px;color:var(--tx2)}
 .chipcard .spec b{font-family:"JetBrains Mono";font-size:18px}
-.meter{height:10px;border-radius:5px;background:rgba(255,255,255,.07);margin-top:16px;overflow:hidden}
+.meter{height:10px;border-radius:5px;background:rgba(0,0,0,.06);margin-top:16px;overflow:hidden}
 .meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--or),var(--or2));transition:width 1.8s .4s cubic-bezier(.2,.8,.2,1)}
 /* vibration */
 #vib-alert{opacity:0;transform:scale(.8);transition:all .4s}
@@ -150,22 +150,77 @@ pre.code .c{color:#7d7873;font-style:italic}.code .k{color:var(--or2)}.code .s{c
 .ic svg{width:30px;height:30px}
 .card[style*="text-align:center"] .ic{margin:0 auto 16px}
 .big .ic{display:none}
+
+/* ======== THÈME CLAIR ======== */
+:root{--or:#BE4F23;--or2:#BE4F23;--or3:#BE4F23;--orbg:#FBEEE7;--ink:#FBFAF8;--tx:#1D1D1F;--tx2:#55555A;--tx3:#8E8E93;--ok:#3E9B5F}
+html,body{background:#EDEBE8;font-family:Inter,-apple-system,"SF Pro Text",system-ui,sans-serif}
+#stage{background:var(--ink)}
+h1,h2,h3{font-family:Inter,-apple-system,"SF Pro Display",sans-serif;font-weight:600;letter-spacing:-.03em;color:var(--tx)}
+h2{font-weight:600}
+.kicker{font:600 16px Inter,sans-serif;letter-spacing:.12em;color:var(--or)}
+.kicker::before{display:none}
+.slide::after{background:none}
+.shade{display:none}
+.tag{font:500 15px Inter,sans-serif;color:var(--tx3)}
+.lead{color:var(--tx2)}
+.card{background:#fff;border:none;border-radius:24px;box-shadow:0 1px 2px rgba(0,0,0,.03),0 10px 40px -12px rgba(0,0,0,.10)}
+.card::before{display:none}
+.card.hl{background:#FFF;box-shadow:0 1px 2px rgba(190,79,35,.06),0 14px 44px -14px rgba(190,79,35,.35)}
+.card.hl h3{color:var(--or)}
+.pill{background:var(--orbg);border:none;color:var(--or);font:600 13px Inter,sans-serif;letter-spacing:.06em}
+.ic{background:var(--orbg);border:none;color:var(--or)}
+.ii{color:var(--or)}
+.big{color:var(--or);font-family:Inter,sans-serif;font-weight:600;letter-spacing:-.05em}
+.quote{font-family:Inter,sans-serif;font-weight:500;letter-spacing:-.02em;color:var(--tx)}
+.quote em{color:var(--or)}
+.layer{background:#fff;border:none;box-shadow:0 1px 2px rgba(0,0,0,.03),0 8px 30px -12px rgba(0,0,0,.10)}
+.layer .ln{font-family:Inter;color:var(--or)}
+.barrow .track{background:#EFECE8}
+.barrow .fill{background:linear-gradient(90deg,#D9764E,#BE4F23)}
+.barrow .val{font-family:Inter;font-weight:600}
+.barrow .lab{font-family:Inter}
+.meter{background:#EFECE8}.meter i{background:linear-gradient(90deg,#D9764E,#BE4F23)}
+.qcell{background:#fff;border:none;box-shadow:0 8px 28px -12px rgba(0,0,0,.12);font-family:Inter;color:var(--tx)}
+.qgrid.on .qcell{background:var(--orbg);border:none}
+.qcell .iv{color:var(--or)}
+pre.code{background:#F5F5F7;border:none;color:#1D1D1F;border-radius:20px}
+pre.code .c{color:#8E8E93}.code .k{color:var(--or)}.code .s{color:#A0522D}
+table.t th{border-bottom:1px solid #E5E2DE;color:var(--tx3);font:600 14px Inter,sans-serif}
+table.t td{border-bottom:1px solid #F0EEEB}
+.speaker .av{background:var(--or);color:#fff;font-family:Inter}
+.speaker .n{font-family:Inter;font-weight:600}
+.logo{background:none;padding:0;height:72px}
+#s-title h1{font-family:Inter;font-weight:600;font-size:104px;letter-spacing:-.05em}
+.bgimg{display:none}
+.bgimg.panel{display:block;background-color:#F3E3DA;background-image:radial-gradient(circle at 30% 30%,#F8EDE7,#E9C6B3);left:auto;right:70px;top:70px;bottom:70px;width:600px;border-radius:36px;z-index:0;
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.35);opacity:0;transform:scale(1.04)}
+.active .bgimg.panel,.active .bgimg.panel.strong{opacity:1;transform:none;transition:opacity 1.2s, transform 1.6s cubic-bezier(.2,.8,.2,1)}
+#bar{background:var(--or);height:3px}
+#hud,#who{color:#9a9a9f;font-family:Inter}
+#notes{background:rgba(255,255,255,.97);color:#1D1D1F;border-top:1px solid #E5E2DE;box-shadow:0 -10px 40px rgba(0,0,0,.08)}
+#help{background:rgba(251,250,248,.96);color:#1D1D1F}
+.flow{stroke-dasharray:none;animation:none}
+#vib-state.ok,.ok{color:var(--ok)}
+svg text[fill="#E0703F"]{fill:#BE4F23}
+.section .speaker{margin-top:44px}
+.mono{font-family:"JetBrains Mono",monospace}
+.accent{color:var(--or)}
 </style>
 </head>
 <body>
 <div id="stage">
 
 <!-- =============== 1. TITRE =============== -->
-<section class="slide top" id="s-title" data-who="Hamadou BA · Mohamed SANOGO · Nicolas CHEVALIER" data-notes="Bonjour à tous. Nous allons vous présenter notre veille sur l'AIoT et le TinyML : comment l'intelligence artificielle s'intègre directement dans les objets connectés. Présentation en trois temps, environ 10 minutes chacun.">
+<section class="slide top" id="s-title" data-who="Hamadou BA · Mohamed SANOGO · Nicolas CHEVALIER" data-notes="Bonjour à tous. Nous allons vous présenter notre veille sur l'AIoT et le TinyML : comment l'intelligence artificielle s'intègre directement dans les objets connectés. Présentation en trois temps, un par membre du groupe.">
   <canvas id="particles"></canvas>
-  <div class="bgimg strong" data-img="chip"></div><div class="shade"></div>
+  <div class="bgimg panel" data-img="chip"></div>
   <img class="logo in" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOoAAABnCAMAAAA5ZC56AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAJYUExURUdwTMhnQ1hYWF5eW0pKSk9PTdDPz3FxcT09PMRfN8JbMXp6emBgX6GhoL5PI+rNzVJSUeCplDw8O56em29vbM97WuXPy8pqRmJiYD4+PuDTzuPZ2eba1cRgOfHSyfDTyNSLbte7sD4+O0pKSdTOzNmUetSHacprR1VVU8ZlPqtaOpiYmMlsSImJh75PI813VU9PTcPDw8ZjPDw8PMtxTeSqmc7LymdnZltNRbypo1JSUL9SJuKrl8ViO8RfN1paWW1tbE5OTcZjPlxcW+WzouW4qMdmQWVlZFpaWj4+PmVlZfPUzD4+PO7Mvr1OI3FxcMlqRVFRUM54V25ubT4+PezY0mJiYdqXfspsR1ZWVU5OTL1QI9SGaXFxbmVlY75NJIGBgNaMcD09PWRkY319e21tbXNzc9iRdoCAf855WIiIh3Fxb9PPz3t7enp6emVlY19fXtF/X9OEZdaNcd2dhjw8PMdmP5GRj6ysrFhYV6WlpFFRUOe6qtmXfYyMi3l5edmVe8psSdB8XNB+XdWLbstvTN6gi1xcW8hpQ8puSqmpp15eXEVFRHFxcWhoZ9DQ0MJYLs97W8VgON+kjoGBgMJaMcpvS3h4d8xyT2BgYEFBQX9/fa2trVlZWM/Pz0JCQbhRKMRdNlJSUj8/Pea2pclqRdWKbVFRUMhpQ9WKbsVjPZ2dnEZGRX9/f62trVNTUrhlRc9+X1paWsduSMBVLG5ubtaMcMdnQXh4eKGhoT09PL5PI1hYV0dHRj4+PVlZWEFBQMdnQcBTKEREQ65NJsVfN1FRUGBgYGC62DsAAAC6dFJOUwCHh2/78ySJ8fP7AcUmkAWgSrlKR40Ic+stCwIX3jlHoBRW9RCOcW+enBRY2l6+qMhe+qTrLy5dBhq/6kClwO6R6ZC2KSGJmnYhozuRW6Dz8dDL+uIe53t93NZ5eTi1OlI8T9qGznhWauCRvzWgDM2nhJKSX3bvPlL1NPszaXsjSM+frovfVOHo/i7Qtq2EROWY5me587ySkfyfRz+VTvr+W1TJTadnjty42HrMNX/N/u0tLvFK1ZT0noQXCsYAAAcYSURBVHja7dt7VxPXGgbw59gQj0zSgFGQTDglJXJAQCAqGBrFCBhLW4qcpkilHDhc5Q5YAFG8q8dbvetSW1fv9nbWuV+2zpxACn6tvntPsIa6rK1dNkn388ee2bPfrMVvzd4zExiAnyFr74okI/EjqZIqqZIqqc84SutKI+cT/6z+/m5UJFVSJVVSJVVSJVVSJfXXSg2+EJ1Fw79lUVmaIOpTgR4Fvw5qr2kCsU41mwGkmZ1wm12i64DTbDOb04yO2YhD7DgAAFb7114AVOU0Bp1U/uUEbWOcqq0C8LZ2BoVaG/EqtXycmbd2aGWAOqmV/lcTebeMt9nnFDibw4xpAQXl2suXjcHLGca2MsaprIJT9eUoZKwdeJXlY3nY2smagXG9Aq+zxmJKXxnzW4o1thTNzD9UqbGzKGcv9xQXs1BxcU8Gy+ZFS+KIarIuUG+F/ArOsRqivi/KytirUAv1r9zZ+l7A3raXUwHo2QAymAUA1PihrtI78J5BVSf1CeW0nk/Uv9jt9r2CCrv+lepnOzrtaQCiqKepyG77SdTVkdieJTUwqBdGqAiwc25TtpuoPOVE/eidgJ/1Y1qj/lTAHU0VWfOTqMuM54+ZtGdJ/cxqmjwbobawthY2CKL21tTUdBJVD7FQwAmcWjqYFGLNiKL6qahmINapfgA3GV2BaYpeY/MR6sC8qZd14qG1euPAm6wHcFsB2zR74xFrFTFONYV6zNZBNiSo7kYWocLCTKE+Ti2xUlx8rebrU96vJytuOt3nWOMiKi+yxji1X9fDIZa9V1CRH4pQVZqxb6mcGuJZKi5LFhYorWD6bU0PT0dTdV40FePUtJ4d9ysq+Q3E8hyXW24hYPECpyyWdgCXLSLdN/nouKVX9fY33p+05CvYYlkDwNIL4IBR1BvjVKiKqjx6RPn+vVJRAEVVvxt/XGKO+hTpXhWV15+GOrveSFNsUp+LtpiehrqQ30iqpEqqpEqqpEqqpEqqpEqqpEqqpEqqpEqqpEpqnFIPrDDykWHR/x8d3Tjsj1RZAQDYuKjqm7igLmQ5e1zeii7euGhYUiVVUiVVUp8ilfcel8FF1EXDf52JyjBkEiCBFAUAgrkpIgcAlKVkALiW0gdgaUon0JLSDaA7ZcW/qCL3mhXoF8W53riiJjFBLQ0ZT1xvA8hlfwLwJisBBkxsyo0WdgJQG/Xx7aJoyoo/iJ3QqfikzvM32uyuaGohS9Lz4Zy/7YVLy3ZsZzXvT5SzZqLyt+Ts7vik3nvwbkUue3FgYEBQK9n/9Ga+mUY3G8R29g6wgp0h6rvxt1YfUMM7KL0GNaxpWoioLi3JnZ2kopNVYoh1EvW9vvE2NkTURqr+LE6poTcobQbVf+LECRNRp0nVzAphDd1zJ4X7iKrrOqswE5VX34gxS+vz0Qk+wQReWKsdrGNLB2sGVrEvQ40KURvP3g7fQoxO4Jzox6HZ3z05NWgSF9psB7aw++wsxFqtYZWIV+q6detuuEtD2jqeDx+mdrPTJSUlbXoLxnVGraBaTeEJopbz6pY4o1I0b+S+ypY8TO1g7QDaWSUcSczkNKjoZ22R+6oYjh9qIuUHqB++GJW/JzA1Kfo73RJJjYukrTGyOfGpC5FUSZXUhKWuTuVt6qcAWvP+tmm/CnRlUT6oBg4a/1pWmvUKANcodZSDDfyQM8uM41Q03OUAqkeBPfwjWTmxTc3MDAJoqgVy5kb+sfr8BWDb5p07d9WP7UP6rA8AVt59DcDR2T0A0kUbnHsFK9fu2lV0cbcTG14C8jbvonzwDKmHC4z0/Qjq7iMGtXruEgBfciu2bQWATw4jfaYIgLtujqi2k5/Xc+qxi1UR6vPcfOy6Qd0ZM1/NH0PdU7cHaKhFznoVAOoPR6g785D+b08QOHhyLVGPf+FdVg2kbxqpt8GZHKGi62Ja/FBTj4+5OPXIJ6I/ckhQ0z6ua0B60aEcoGiUU+uPon6EUx13moCXFqiOZK+g5v2RsjHWqThSrxL18yLRHyXq7Fzy7MUslaifFqguj4uo1Ve8OFhHhzah1VP1HRWeNYI6tpuyJuapzpMNRL2+SfSvX8W2PGfVTBeA9CLbjK/pqu3Pr2HYs3Xrf5IvcSqOHlMfUIPJrjiawMBxT1YtujwuALaTTWIC76dTR1QUFRVc4tS6JpqgeVcF1VYw8oDa8AXiiooLc7Vwr7+QBtuwxymoypFjDk71zY3ZiNo1lgaoG654ORU+z6xBtfmW7Y8zquNOLbCvbv3WgmWtMK7A7rqV/BTa7hwGUesviOJDw4KK1Zz6z8zM856jMKhXMnl+eWr7FpGhR1F9TgBq9QYAzv2jObxXVQUA1T7wo1UOKB8HfS5RvG+fKIQj1Y2q1NTUF2wA3D5gQ6pIzDw2Zvy4Z2AFAKAoiMNkJNLjvqRKqqRK6pPkWxBHDSUB2wssAAAAAElFTkSuQmCC" alt="Université Le Havre Normandie">
   <div style="margin-top:120px">
     <div class="kicker in d1">Module Internet des Objets · Veille documentaire</div>
-    <h1><span style="transition-delay:.2s">L'AIoT</span> <span style="transition-delay:.35s;color:var(--or2)">&amp;</span> <span style="transition-delay:.5s">le TinyML</span></h1>
-    <p class="lead in d5" style="margin-top:26px;font-size:32px">Quand l'intelligence artificielle s'intègre<br>dans les objets connectés</p>
+    <h1><span style="transition-delay:.2s">L'AIoT</span> <span style="transition-delay:.35s;color:var(--or)">&amp;</span><br><span style="transition-delay:.5s">le TinyML</span></h1>
+    <p class="lead in d5" style="margin-top:26px;font-size:30px;max-width:720px">Quand l'intelligence artificielle s'intègre<br>dans les objets connectés</p>
   </div>
-  <div class="in d7" style="position:absolute;left:96px;bottom:80px;display:flex;gap:70px">
+  <div class="in d7" style="position:absolute;left:96px;bottom:80px;display:flex;flex-direction:column;gap:22px">
     <div><div class="tag">Présenté par</div><div style="font:500 22px 'Space Grotesk';margin-top:6px">Hamadou BA · Mohamed SANOGO · Nicolas CHEVALIER</div></div>
     <div><div class="tag">Encadrant</div><div style="font:500 22px 'Space Grotesk';margin-top:6px">M. Claude DUVALLET</div></div>
   </div>
@@ -173,7 +228,6 @@ pre.code .c{color:#7d7873;font-style:italic}.code .k{color:var(--or2)}.code .s{c
 
 <!-- =============== 2. ACCROCHE =============== -->
 <section class="slide" data-who="Hamadou BA" data-notes="Accroche : près de 19 milliards d'objets connectés fin 2024 selon IoT Analytics. Ils produisent un volume énorme de données, aujourd'hui envoyées vers le cloud. Question : et si l'objet savait décider lui-même ?">
-  <div class="bgimg" data-img="city"></div><div class="shade"></div>
   <div class="kicker in">Le contexte</div>
   <div class="big in d1"><span class="count" data-to="18.8" data-dec="1">0</span> <span style="font-size:70px">milliards</span></div>
   <p class="lead in d2" style="margin-top:10px">d'objets connectés actifs dans le monde fin 2024 <span class="tag">(IoT Analytics)</span></p>
@@ -187,7 +241,7 @@ pre.code .c{color:#7d7873;font-style:italic}.code .k{color:var(--or2)}.code .s{c
 <!-- =============== 3. PROBLÉMATIQUE + PLAN =============== -->
 <section class="slide" data-who="Hamadou BA" data-notes="Notre problématique : faire tourner des modèles conçus pour des serveurs à plusieurs Go sur des objets qui ont quelques centaines de Ko. Puis le plan en 5 parties et la répartition entre nous trois.">
   <div class="kicker in">Problématique</div>
-  <p class="quote in d1">Comment exécuter une <em>IA conçue pour des serveurs</em> sur un objet qui ne dispose que de <em>quelques centaines de kilooctets</em> — et qu'y gagne-t-on ?</p>
+  <p class="quote in d1">Comment exécuter une <em>IA conçue pour des serveurs</em> sur un objet qui ne dispose que de <em>quelques centaines de kilooctets</em>, et qu'y gagne-t-on ?</p>
   <div class="grid" style="grid-template-columns:repeat(5,1fr);margin-top:80px;gap:16px">
     <div class="card in d3"><div class="pill">01</div><h3 style="margin-top:14px;font-size:22px">IoT, AIoT &amp; TinyML</h3><p class="tag" style="margin-top:8px">Hamadou</p></div>
     <div class="card in d4"><div class="pill">02</div><h3 style="margin-top:14px;font-size:22px">Principes techniques</h3><p class="tag" style="margin-top:8px">Mohamed</p></div>
@@ -199,13 +253,13 @@ pre.code .c{color:#7d7873;font-style:italic}.code .k{color:var(--or2)}.code .s{c
 
 <!-- =============== SECTION 1 =============== -->
 <section class="slide section top" data-who="Hamadou BA" data-notes="Première partie : poser les bases. Qu'est-ce qu'un objet connecté, l'architecture IoT, puis l'AIoT et le TinyML.">
-  <div class="bgimg" data-img="city"></div><div class="shade"></div>
-  <div style="margin-top:220px">
+  <div class="bgimg panel" data-img="city"></div>
+  <div style="margin-top:250px">
     <div class="kicker in">Partie 1</div>
-    <h2 class="in d1" style="font-size:90px">De l'IoT à l'AIoT<br>et au <span class="accent">TinyML</span></h2>
-    <div class="speaker in d3"><div class="av">HB</div><div><div class="n">Hamadou BA</div><div class="r">≈ 10 minutes</div></div></div>
+    <h2 class="in d1" style="font-size:72px;max-width:760px">De l'IoT à l'AIoT<br>et au <span class="accent">TinyML</span></h2>
+    <div class="speaker in d3"><div class="av">HB</div><div><div class="n">Hamadou BA</div></div></div>
   </div>
-  <div class="num">01</div>
+  
 </section>
 
 <!-- =============== 4. OBJET CONNECTÉ =============== -->
@@ -219,15 +273,15 @@ pre.code .c{color:#7d7873;font-style:italic}.code .k{color:var(--or2)}.code .s{c
         <path class="draw" style="--len:200" d="M320 260 L130 110"/><path class="draw" style="--len:200" d="M320 260 L510 110"/>
         <path class="draw" style="--len:200" d="M320 260 L130 420"/><path class="draw" style="--len:200" d="M320 260 L510 420"/>
       </g>
-      <g class="float"><rect x="230" y="190" width="180" height="140" rx="20" fill="#2a1a12" stroke="#E0703F" stroke-width="3" filter="url(#glow)"/>
+      <g class="float"><rect x="230" y="190" width="180" height="140" rx="20" fill="#FBEEE7" stroke="#BE4F23" stroke-width="3" filter="url(#glow)"/>
 
-      <text x="320" y="252" fill="#F4F1EE" text-anchor="middle" font-size="22" font-weight="700">MCU</text>
-      <text x="320" y="282" fill="#B9B4AF" text-anchor="middle" font-size="15">microcontrôleur</text></g>
+      <text x="320" y="252" fill="#1D1D1F" text-anchor="middle" font-size="22" font-weight="700">MCU</text>
+      <text x="320" y="282" fill="#6E6E73" text-anchor="middle" font-size="15">microcontrôleur</text></g>
       <g font-size="19" text-anchor="middle">
-        <circle cx="130" cy="110" r="58" fill="#262625" stroke="#555"/><text x="130" y="105" fill="#F4F1EE" font-weight="600">Capteurs</text><text x="130" y="128" fill="#85807B" font-size="14">mesurer</text>
-        <circle cx="510" cy="110" r="58" fill="#262625" stroke="#555"/><text x="510" y="105" fill="#F4F1EE" font-weight="600">Radio</text><text x="510" y="128" fill="#85807B" font-size="14">Wi-Fi · BLE · LoRa</text>
-        <circle cx="130" cy="420" r="58" fill="#262625" stroke="#555"/><text x="130" y="415" fill="#F4F1EE" font-weight="600">Actionneurs</text><text x="130" y="438" fill="#85807B" font-size="14">agir</text>
-        <circle cx="510" cy="420" r="58" fill="#262625" stroke="#555"/><text x="510" y="415" fill="#F4F1EE" font-weight="600">Énergie</text><text x="510" y="438" fill="#85807B" font-size="14">pile · batterie</text>
+        <circle cx="130" cy="110" r="58" fill="#FFFFFF" stroke="#E8E5E1"/><text x="130" y="105" fill="#1D1D1F" font-weight="600">Capteurs</text><text x="130" y="128" fill="#8E8E93" font-size="14">mesurer</text>
+        <circle cx="510" cy="110" r="58" fill="#FFFFFF" stroke="#E8E5E1"/><text x="510" y="105" fill="#1D1D1F" font-weight="600">Radio</text><text x="510" y="128" fill="#8E8E93" font-size="14">Wi-Fi · BLE · LoRa</text>
+        <circle cx="130" cy="420" r="58" fill="#FFFFFF" stroke="#E8E5E1"/><text x="130" y="415" fill="#1D1D1F" font-weight="600">Actionneurs</text><text x="130" y="438" fill="#8E8E93" font-size="14">agir</text>
+        <circle cx="510" cy="420" r="58" fill="#FFFFFF" stroke="#E8E5E1"/><text x="510" y="415" fill="#1D1D1F" font-weight="600">Énergie</text><text x="510" y="438" fill="#8E8E93" font-size="14">pile · batterie</text>
       </g>
     </svg>
     <div>
@@ -240,7 +294,7 @@ pre.code .c{color:#7d7873;font-style:italic}.code .k{color:var(--or2)}.code .s{c
           <div><div style="font:700 44px 'Space Grotesk'" class="accent">~5 €</div><div class="tag">l'unité</div></div>
         </div>
       </div>
-      <p class="f" style="margin-top:28px">Contrainte n°1 : <b class="accent">le budget énergétique</b> — des mois, voire des années sur pile.</p>
+      <p class="f" style="margin-top:28px">Contrainte n°1 : <b class="accent">le budget énergétique</b> : des mois, voire des années sur pile.</p>
     </div>
   </div>
 </section>
@@ -259,7 +313,7 @@ pre.code .c{color:#7d7873;font-style:italic}.code .k{color:var(--or2)}.code .s{c
     <svg viewBox="0 0 150 470" style="height:470px"><path d="M75 455 L75 20" stroke="#BE4F23" stroke-width="4" class="flow"/><path d="M60 35 L75 10 L90 35" fill="none" stroke="#BE4F23" stroke-width="4"/>
       <circle r="8" fill="#E0703F"><animateMotion dur="2.2s" repeatCount="indefinite" path="M75 455 L75 20"/></circle>
       <circle r="8" fill="#E0703F"><animateMotion dur="2.2s" begin="1.1s" repeatCount="indefinite" path="M75 455 L75 20"/></circle>
-      <text x="75" y="250" fill="#85807B" font-size="15" transform="rotate(-90 75 250)" text-anchor="middle" dy="-18">données brutes</text></svg>
+      <text x="75" y="250" fill="#8E8E93" font-size="15" transform="rotate(-90 75 250)" text-anchor="middle" dy="-18">données brutes</text></svg>
   </div>
 </section>
 
@@ -272,7 +326,7 @@ pre.code .c{color:#7d7873;font-style:italic}.code .k{color:var(--or2)}.code .s{c
       <p class="tag">accéléromètre · 3 axes · 1 kHz · 16 bits</p>
       <div class="big" style="font-size:130px;margin-top:10px"><span class="count" data-to="518">0</span><span style="font-size:60px"> Mo</span></div>
       <p class="lead">de données brutes <b>par jour</b> à transmettre</p>
-      <svg viewBox="0 0 600 120" style="width:100%;margin-top:30px"><path id="wav" fill="none" stroke="#E0703F" stroke-width="2.5"/></svg>
+      <svg viewBox="0 0 600 120" style="width:100%;margin-top:30px"><path id="wav" fill="none" stroke="#BE4F23" stroke-width="2.5"/></svg>
     </div>
     <div class="grid" style="gap:14px">
       <div class="card f" style="padding:18px 24px"><h3 style="font-size:23px"><span class="ii"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 20h.01" /><path d="M7 20v-4" /><path d="M12 20v-8" /><path d="M17 20V8" /><path d="M22 4v16" /></svg></span>Bande passante saturée</h3><p style="font-size:18px">LoRaWAN / NB-IoT : quelques kbit/s</p></div>
@@ -286,7 +340,6 @@ pre.code .c{color:#7d7873;font-style:italic}.code .k{color:var(--or2)}.code .s{c
 
 <!-- =============== 7. AIoT =============== -->
 <section class="slide" data-who="Hamadou BA" data-notes="AIoT = Artificial Intelligence of Things (Zhang &amp; Tao 2021). On passe d'objets qui mesurent à des systèmes qui comprennent et décident. L'IA sert quand les règles écrites à la main ne suffisent plus : reconnaître un mot, distinguer un roulement usé.">
-  <div class="bgimg" data-img="aiot"></div><div class="shade"></div>
   <div class="kicker in">1.4 · AIoT</div>
   <h2 class="in d1">AI + IoT = <span class="accent">AIoT</span></h2>
   <p class="lead in d2">Donner aux objets la capacité d'<b>interpréter</b> leurs données et de <b>décider</b>.</p>
@@ -345,7 +398,7 @@ pre.code .c{color:#7d7873;font-style:italic}.code .k{color:var(--or2)}.code .s{c
   </div>
   <div style="display:grid;grid-template-columns:1fr 120px 1fr;gap:20px;align-items:center;margin-top:50px">
     <div class="card f" style="border-color:#555"><div class="pill">PC / CLOUD</div><h3 style="margin-top:14px">Entraînement</h3><p>Ajuster des millions de paramètres sur des milliers d'exemples. Lourd, une seule fois.</p></div>
-    <svg viewBox="0 0 120 60" class="f"><path d="M5 30 H105" stroke="#BE4F23" stroke-width="4" class="flow"/><path d="M95 18 L112 30 L95 42" stroke="#BE4F23" stroke-width="4" fill="none"/><text x="60" y="58" fill="#85807B" font-size="12" text-anchor="middle">modèle figé</text></svg>
+    <svg viewBox="0 0 120 60" class="f"><path d="M5 30 H105" stroke="#BE4F23" stroke-width="4" class="flow"/><path d="M95 18 L112 30 L95 42" stroke="#BE4F23" stroke-width="4" fill="none"/><text x="60" y="58" fill="#8E8E93" font-size="12" text-anchor="middle">modèle figé</text></svg>
     <div class="card hl f"><div class="pill">MICROCONTRÔLEUR</div><h3 style="margin-top:14px" class="accent">Inférence</h3><p>Appliquer le modèle à chaque nouvelle mesure. Léger, en continu.</p></div>
   </div>
 </section>
@@ -357,12 +410,12 @@ pre.code .c{color:#7d7873;font-style:italic}.code .k{color:var(--or2)}.code .s{c
   <svg viewBox="0 0 1400 230" style="width:100%;margin-top:20px" class="in d2">
     <circle r="9" fill="#E0703F" filter="url(#glow)"><animateMotion dur="3s" repeatCount="indefinite" path="M110 125 H1235"/></circle>
     <g font-size="20" text-anchor="middle">
-      <rect x="10" y="80" width="200" height="90" rx="16" fill="#262625" stroke="#666"/><text x="110" y="120" fill="#F4F1EE" font-weight="600">Capteur</text><text x="110" y="148" fill="#85807B" font-size="15">accéléromètre</text>
-      <rect x="290" y="40" width="760" height="170" rx="22" fill="rgba(190,79,35,.08)" stroke="#BE4F23" stroke-dasharray="8 6"/><text x="670" y="30" fill="#E0703F" font-size="16">ESP32</text>
-      <rect x="320" y="80" width="200" height="90" rx="16" fill="#262625" stroke="#666"/><text x="420" y="120" fill="#F4F1EE" font-weight="600">Prétraitement</text><text x="420" y="148" fill="#85807B" font-size="15">fenêtre · FFT</text>
-      <rect x="570" y="80" width="200" height="90" rx="16" fill="#3a1d10" stroke="#E0703F" stroke-width="2"/><text x="670" y="120" fill="#F4F1EE" font-weight="600">Inférence</text><text x="670" y="148" fill="#E0703F" font-size="15">modèle TinyML</text>
-      <rect x="820" y="80" width="200" height="90" rx="16" fill="#262625" stroke="#666"/><text x="920" y="120" fill="#F4F1EE" font-weight="600">Décision</text><text x="920" y="148" fill="#85807B" font-size="15">score &gt; seuil ?</text>
-      <rect x="1120" y="80" width="230" height="90" rx="16" fill="#262625" stroke="#666"/><text x="1235" y="120" fill="#F4F1EE" font-weight="600">Action</text><text x="1235" y="148" fill="#85807B" font-size="15">LED · alerte MQTT</text>
+      <rect x="10" y="80" width="200" height="90" rx="16" fill="#FFFFFF" stroke="#E8E5E1"/><text x="110" y="120" fill="#1D1D1F" font-weight="600">Capteur</text><text x="110" y="148" fill="#8E8E93" font-size="15">accéléromètre</text>
+      <rect x="290" y="40" width="760" height="170" rx="22" fill="rgba(190,79,35,.06)" stroke="none"/><text x="670" y="30" fill="#E0703F" font-size="16">ESP32</text>
+      <rect x="320" y="80" width="200" height="90" rx="16" fill="#FFFFFF" stroke="#E8E5E1"/><text x="420" y="120" fill="#1D1D1F" font-weight="600">Prétraitement</text><text x="420" y="148" fill="#8E8E93" font-size="15">fenêtre · FFT</text>
+      <rect x="570" y="80" width="200" height="90" rx="16" fill="#FBEEE7" stroke="#BE4F23" stroke-width="2"/><text x="670" y="120" fill="#1D1D1F" font-weight="600">Inférence</text><text x="670" y="148" fill="#E0703F" font-size="15">modèle TinyML</text>
+      <rect x="820" y="80" width="200" height="90" rx="16" fill="#FFFFFF" stroke="#E8E5E1"/><text x="920" y="120" fill="#1D1D1F" font-weight="600">Décision</text><text x="920" y="148" fill="#8E8E93" font-size="15">score &gt; seuil ?</text>
+      <rect x="1120" y="80" width="230" height="90" rx="16" fill="#FFFFFF" stroke="#E8E5E1"/><text x="1235" y="120" fill="#1D1D1F" font-weight="600">Action</text><text x="1235" y="148" fill="#8E8E93" font-size="15">LED · alerte MQTT</text>
     </g>
     <path id="loop" d="M210 125 H320 M520 125 H570 M770 125 H820 M1020 125 H1120" stroke="#BE4F23" stroke-width="3" class="flow"/>
   </svg>
@@ -383,31 +436,30 @@ pre.code .c{color:#7d7873;font-style:italic}.code .k{color:var(--or2)}.code .s{c
   <svg viewBox="0 0 1400 520" style="width:100%;margin-top:10px">
     <g id="rawpackets"></g>
     <g font-size="19" text-anchor="middle">
-      <text x="0" y="40" fill="#B9B4AF" text-anchor="start" font-size="22" font-weight="600">Architecture cloud : on envoie tout</text>
-      <rect x="20" y="70" width="190" height="90" rx="14" fill="#262625" stroke="#666"/><text x="115" y="122" fill="#F4F1EE">Capteur + MCU</text>
-      <rect x="440" y="70" width="190" height="90" rx="14" fill="#262625" stroke="#666"/><text x="535" y="122" fill="#F4F1EE">Passerelle</text>
-      <rect x="860" y="70" width="190" height="90" rx="14" fill="#262625" stroke="#B9B4AF"/><text x="955" y="112" fill="#F4F1EE">Cloud</text><text x="955" y="138" fill="#85807B" font-size="15">modèle IA</text>
-      <rect x="1190" y="70" width="190" height="90" rx="14" fill="#262625" stroke="#666"/><text x="1285" y="122" fill="#F4F1EE">Décision</text>
-      <path d="M210 115 H440 M630 115 H860" stroke="#7a7570" stroke-width="16" opacity=".35"/>
-      <path d="M1050 115 H1190" stroke="#7a7570" stroke-width="3"/>
-      <path d="M1285 160 V200 H115 V160" stroke="#7a7570" stroke-width="2" fill="none" stroke-dasharray="6 6"/>
-      <text x="700" y="225" fill="#85807B" font-size="15">commande en retour… après la latence réseau</text>
+      <text x="0" y="40" fill="#6E6E73" text-anchor="start" font-size="22" font-weight="600">Architecture cloud : on envoie tout</text>
+      <rect x="20" y="70" width="190" height="90" rx="14" fill="#FFFFFF" stroke="#E8E5E1"/><text x="115" y="122" fill="#1D1D1F">Capteur + MCU</text>
+      <rect x="440" y="70" width="190" height="90" rx="14" fill="#FFFFFF" stroke="#E8E5E1"/><text x="535" y="122" fill="#1D1D1F">Passerelle</text>
+      <rect x="860" y="70" width="190" height="90" rx="14" fill="#FFFFFF" stroke="#E8E5E1"/><text x="955" y="112" fill="#1D1D1F">Cloud</text><text x="955" y="138" fill="#8E8E93" font-size="15">modèle IA</text>
+      <rect x="1190" y="70" width="190" height="90" rx="14" fill="#FFFFFF" stroke="#E8E5E1"/><text x="1285" y="122" fill="#1D1D1F">Décision</text>
+      <path d="M210 115 H440 M630 115 H860" stroke="#D9D5D0" stroke-width="16" opacity=".35"/>
+      <path d="M1050 115 H1190" stroke="#D9D5D0" stroke-width="3"/>
+      <path d="M1285 160 V200 H115 V160" stroke="#D9D5D0" stroke-width="2" fill="none"/>
+      <text x="700" y="225" fill="#8E8E93" font-size="15">commande en retour… après la latence réseau</text>
     </g>
     <g font-size="19" text-anchor="middle" class="f" id="tinyrow">
       <g><rect x="0" y="-16" width="96" height="32" rx="16" fill="#BE4F23"/><text x="48" y="6" fill="#fff" font-size="15" font-weight="700">ALERTE</text>
         <animateMotion dur="4s" repeatCount="indefinite" path="M330 390 H1010" keyTimes="0;0.6;1" keyPoints="0;1;1" calcMode="linear"/></g>
       <text x="0" y="310" fill="#E0703F" text-anchor="start" font-size="22" font-weight="600">Architecture TinyML : on décide sur place</text>
-      <rect x="20" y="340" width="300" height="100" rx="14" fill="#3a1d10" stroke="#E0703F" stroke-width="2"/><text x="170" y="384" fill="#F4F1EE">Capteur + MCU + modèle</text><text x="170" y="412" fill="#E0703F" font-size="15">décision locale en quelques ms</text>
-      <rect x="640" y="345" width="190" height="90" rx="14" fill="#262625" stroke="#666"/><text x="735" y="397" fill="#F4F1EE">Passerelle</text>
-      <rect x="1100" y="345" width="250" height="90" rx="14" fill="#262625" stroke="#666"/><text x="1225" y="388" fill="#F4F1EE">Cloud</text><text x="1225" y="414" fill="#85807B" font-size="15">supervision</text>
-      <path d="M320 390 H640 M830 390 H1100" stroke="#BE4F23" stroke-width="2" stroke-dasharray="4 8"/>
+      <rect x="20" y="340" width="300" height="100" rx="14" fill="#FBEEE7" stroke="#BE4F23" stroke-width="2"/><text x="170" y="384" fill="#1D1D1F">Capteur + MCU + modèle</text><text x="170" y="412" fill="#E0703F" font-size="15">décision locale en quelques ms</text>
+      <rect x="640" y="345" width="190" height="90" rx="14" fill="#FFFFFF" stroke="#E8E5E1"/><text x="735" y="397" fill="#1D1D1F">Passerelle</text>
+      <rect x="1100" y="345" width="250" height="90" rx="14" fill="#FFFFFF" stroke="#E8E5E1"/><text x="1225" y="388" fill="#1D1D1F">Cloud</text><text x="1225" y="414" fill="#8E8E93" font-size="15">supervision</text>
+      <path d="M320 390 H640 M830 390 H1100" stroke="#BE4F23" stroke-width="2"/>
     </g>
   </svg>
 </section>
 
 <!-- =============== 13. TABLEAU COMPARAISON + CAS D'ÉTUDE =============== -->
 <section class="slide" data-who="Hamadou BA" data-notes="Synthèse en tableau. Les deux approches sont complémentaires : architecture hybride. Puis notre fil rouge : un moteur, un accéléromètre et un ESP32 qui détecte les vibrations anormales. Je passe la parole à Mohamed pour les principes techniques.">
-  <div class="bgimg" data-img="moteur"></div><div class="shade"></div>
   <div class="kicker in">1.10 · Synthèse &amp; fil rouge</div>
   <h2 class="in d1">Ce qui change <span class="accent">vraiment</span></h2>
   <table class="t" style="margin-top:20px;max-width:1150px">
@@ -425,13 +477,13 @@ pre.code .c{color:#7d7873;font-style:italic}.code .k{color:var(--or2)}.code .s{c
 
 <!-- =============== SECTION 2 =============== -->
 <section class="slide section top" data-who="Mohamed SANOGO" data-notes="Deuxième partie : comment faire tenir un modèle de plusieurs Mo dans quelques centaines de Ko ? Pipeline, compression, puis matériel et outils.">
-  <div class="bgimg" data-img="compression"></div><div class="shade"></div>
-  <div style="margin-top:220px">
+  <div class="bgimg panel" data-img="compression"></div>
+  <div style="margin-top:250px">
     <div class="kicker in">Parties 2 &amp; 3</div>
-    <h2 class="in d1" style="font-size:90px">Principes techniques,<br><span class="accent">matériel &amp; outils</span></h2>
-    <div class="speaker in d3"><div class="av">MS</div><div><div class="n">Mohamed SANOGO</div><div class="r">≈ 10 minutes</div></div></div>
+    <h2 class="in d1" style="font-size:72px;max-width:760px">Principes techniques,<br><span class="accent">matériel &amp; outils</span></h2>
+    <div class="speaker in d3"><div class="av">MS</div><div><div class="n">Mohamed SANOGO</div></div></div>
   </div>
-  <div class="num">02</div>
+  
 </section>
 
 <!-- =============== 14. PIPELINE =============== -->
@@ -522,8 +574,8 @@ open(<span class="s">"modele_int8.tflite"</span>, <span class="s">"wb"</span>).w
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:50px;margin-top:20px">
     <div>
       <svg viewBox="0 0 600 260" style="width:100%" class="in d2">
-        <circle cx="130" cy="130" r="105" fill="#262625" stroke="#B9B4AF" stroke-width="2"/><text x="130" y="125" fill="#F4F1EE" text-anchor="middle" font-size="22" font-weight="700">Professeur</text><text x="130" y="152" fill="#85807B" text-anchor="middle" font-size="15">ResNet-152 · 60 M</text>
-        <circle cx="490" cy="130" r="55" fill="#3a1d10" stroke="#E0703F" stroke-width="2"/><text x="490" y="126" fill="#F4F1EE" text-anchor="middle" font-size="18" font-weight="700">Élève</text><text x="490" y="148" fill="#E0703F" text-anchor="middle" font-size="13">4 M param.</text>
+        <circle cx="130" cy="130" r="105" fill="#FFFFFF" stroke="#E8E5E1" stroke-width="2"/><text x="130" y="125" fill="#1D1D1F" text-anchor="middle" font-size="22" font-weight="700">Professeur</text><text x="130" y="152" fill="#8E8E93" text-anchor="middle" font-size="15">ResNet-152 · 60 M</text>
+        <circle cx="490" cy="130" r="55" fill="#FBEEE7" stroke="#BE4F23" stroke-width="2"/><text x="490" y="126" fill="#1D1D1F" text-anchor="middle" font-size="18" font-weight="700">Élève</text><text x="490" y="148" fill="#E0703F" text-anchor="middle" font-size="13">4 M param.</text>
         <path d="M240 130 H430" stroke="#BE4F23" stroke-width="3" class="flow"/>
         <text x="335" y="110" fill="#E0703F" text-anchor="middle" font-size="15">probabilités « adoucies »</text>
         <g fill="#E0703F"><circle r="5"><animateMotion dur="1.6s" repeatCount="indefinite" path="M240 130 H430"/></circle><circle r="5"><animateMotion dur="1.6s" begin=".5s" repeatCount="indefinite" path="M240 130 H430"/></circle><circle r="5"><animateMotion dur="1.6s" begin="1s" repeatCount="indefinite" path="M240 130 H430"/></circle></g>
@@ -557,7 +609,7 @@ open(<span class="s">"modele_int8.tflite"</span>, <span class="s">"wb"</span>).w
       <div class="spec"><span>Cœur</span><b>Cortex-M55 · 800 MHz</b></div><div class="spec"><span>NPU</span><b>Neural-ART · 600 GOPS</b></div><div class="spec"><span>Efficacité</span><b>~3 TOPS/W</b></div><div class="spec"><span>SRAM</span><b>4,2 Mo</b></div>
       <div class="tag" style="margin-top:14px">Fréquence</div><div class="meter"><i data-w="100"></i></div></div>
   </div>
-  <p class="f" style="margin-top:30px">Pour notre moteur : un <b class="accent">ESP32</b> suffit largement — et son Wi-Fi envoie les alertes.</p>
+  <p class="f" style="margin-top:30px">Pour notre moteur : un <b class="accent">ESP32</b> suffit largement, et son Wi-Fi envoie les alertes.</p>
 </section>
 
 <!-- =============== 20. OUTILS =============== -->
@@ -582,13 +634,13 @@ open(<span class="s">"modele_int8.tflite"</span>, <span class="s">"wb"</span>).w
 
 <!-- =============== SECTION 3 =============== -->
 <section class="slide section top" data-who="Nicolas CHEVALIER" data-notes="Troisième partie : ce que ça apporte vraiment, où on l'utilise, et les limites.">
-  <div class="bgimg" data-img="moteur"></div><div class="shade"></div>
-  <div style="margin-top:220px">
+  <div class="bgimg panel" data-img="moteur"></div>
+  <div style="margin-top:250px">
     <div class="kicker in">Parties 4 &amp; 5</div>
-    <h2 class="in d1" style="font-size:90px">Bénéfices, applications<br><span class="accent">&amp; limites</span></h2>
-    <div class="speaker in d3"><div class="av">NC</div><div><div class="n">Nicolas CHEVALIER</div><div class="r">≈ 10 minutes</div></div></div>
+    <h2 class="in d1" style="font-size:72px;max-width:760px">Bénéfices, applications<br><span class="accent">&amp; limites</span></h2>
+    <div class="speaker in d3"><div class="av">NC</div><div><div class="n">Nicolas CHEVALIER</div></div></div>
   </div>
-  <div class="num">03</div>
+  
 </section>
 
 <!-- =============== 21. BÉNÉFICES (FLIP) =============== -->
@@ -606,7 +658,6 @@ open(<span class="s">"modele_int8.tflite"</span>, <span class="s">"wb"</span>).w
 
 <!-- =============== 22. INDUSTRIE / DEMO VIBRATIONS =============== -->
 <section class="slide" data-who="Nicolas CHEVALIER" data-notes="Notre cas d'usage. Le signal de vibration défile en temps réel. Cliquer pour injecter une anomalie : le score du modèle dépasse le seuil et l'ESP32 envoie une alerte. Attention : détecter un comportement inhabituel n'est pas prédire une panne. C'est un premier niveau de surveillance.">
-  <div class="bgimg" data-img="moteur"></div><div class="shade"></div>
   <div class="kicker in">4.2 · Industrie</div>
   <h2 class="in d1">Démo : un moteur sous <span class="accent">surveillance</span></h2>
   <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:40px;margin-top:20px">
@@ -616,7 +667,7 @@ open(<span class="s">"modele_int8.tflite"</span>, <span class="s">"wb"</span>).w
       <div style="display:flex;align-items:center;gap:14px;margin-top:10px"><span class="tag" style="width:180px">score d'anomalie</span><div class="meter" style="flex:1;margin:0;height:16px"><i id="vib-score" style="transition:width .2s"></i></div><span class="mono" id="vib-val" style="width:60px">0.05</span></div>
     </div>
     <div>
-      <div id="vib-alert" class="card hl" style="padding:20px"><div class="mono accent blink" style="font-size:20px"><span class="ii"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" /><path d="M4 2C2.8 3.7 2 5.7 2 8" /><path d="M22 8c0-2.3-.8-4.3-2-6" /></svg></span>MQTT · usine/moteur1/alerte</div><p style="margin-top:8px">« anomalie détectée » — <b>quelques octets</b> envoyés au lieu de 500 Mo/jour</p></div>
+      <div id="vib-alert" class="card hl" style="padding:20px"><div class="mono accent blink" style="font-size:20px"><span class="ii"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" /><path d="M4 2C2.8 3.7 2 5.7 2 8" /><path d="M22 8c0-2.3-.8-4.3-2-6" /></svg></span>MQTT · usine/moteur1/alerte</div><p style="margin-top:8px">« anomalie détectée » : <b>quelques octets</b> envoyés au lieu de 500 Mo/jour</p></div>
       <div class="f" data-action="anomaly" style="margin-top:20px"><p><span class="ii"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4.1 12 6" /><path d="m5.1 8-2.9-.8" /><path d="m6 12-1.9 2" /><path d="M7.2 2.2 8 5.1" /><path d="M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z" /></svg></span><b>Injection d'un défaut</b> (balourd, roulement usé)</p></div>
       <div class="card f" style="margin-top:20px"><div class="pill">À RETENIR</div><p style="margin-top:10px">Détecter une <b>anomalie</b> ≠ prédire une <b>panne</b>. C'est un premier niveau de surveillance.</p></div>
     </div>
@@ -654,23 +705,22 @@ open(<span class="s">"modele_int8.tflite"</span>, <span class="s">"wb"</span>).w
 
 <!-- =============== 25. HYBRIDE =============== -->
 <section class="slide" data-who="Nicolas CHEVALIER" data-notes="Perspective : le TinyML ne remplace pas le cloud, il le complète. Les objets décident localement et envoient leurs résultats, la passerelle agrège, le cloud entraîne de nouveaux modèles qui redescendent par mise à jour OTA. Et le matériel progresse avec des NPU intégrés.">
-  <div class="bgimg" data-img="futur"></div><div class="shade"></div>
   <div class="kicker in">5.2 · Perspectives</div>
   <h2 class="in d1">Vers une intelligence <span class="accent">distribuée</span></h2>
   <svg viewBox="0 0 1400 420" style="width:100%;margin-top:30px">
     <g font-size="21" text-anchor="middle">
-      <g class="f"><rect x="40" y="140" width="320" height="140" rx="20" fill="#3a1d10" stroke="#E0703F" stroke-width="2"/><text x="200" y="200" fill="#F4F1EE" font-weight="700">Objets TinyML</text><text x="200" y="232" fill="#E0703F" font-size="16">inférence locale · alertes</text></g>
-      <g class="f"><rect x="540" y="140" width="320" height="140" rx="20" fill="#262625" stroke="#888"/><text x="700" y="200" fill="#F4F1EE" font-weight="700">Passerelle / edge</text><text x="700" y="232" fill="#85807B" font-size="16">agrégation · analyses</text></g>
-      <g class="f"><rect x="1040" y="140" width="320" height="140" rx="20" fill="#262625" stroke="#B9B4AF"/><text x="1200" y="200" fill="#F4F1EE" font-weight="700">Cloud</text><text x="1200" y="232" fill="#85807B" font-size="16">entraînement · supervision</text></g>
+      <g class="f"><rect x="40" y="140" width="320" height="140" rx="20" fill="#FBEEE7" stroke="#BE4F23" stroke-width="2"/><text x="200" y="200" fill="#1D1D1F" font-weight="700">Objets TinyML</text><text x="200" y="232" fill="#E0703F" font-size="16">inférence locale · alertes</text></g>
+      <g class="f"><rect x="540" y="140" width="320" height="140" rx="20" fill="#FFFFFF" stroke="#E8E5E1"/><text x="700" y="200" fill="#1D1D1F" font-weight="700">Passerelle / edge</text><text x="700" y="232" fill="#8E8E93" font-size="16">agrégation · analyses</text></g>
+      <g class="f"><rect x="1040" y="140" width="320" height="140" rx="20" fill="#FFFFFF" stroke="#E8E5E1"/><text x="1200" y="200" fill="#1D1D1F" font-weight="700">Cloud</text><text x="1200" y="232" fill="#8E8E93" font-size="16">entraînement · supervision</text></g>
       <g class="f">
         <path d="M360 185 H540 M860 185 H1040" stroke="#BE4F23" stroke-width="3" class="flow"/>
-        <text x="450" y="170" fill="#B9B4AF" font-size="15">résultats</text><text x="950" y="170" fill="#B9B4AF" font-size="15">données utiles</text>
+        <text x="450" y="170" fill="#6E6E73" font-size="15">résultats</text><text x="950" y="170" fill="#6E6E73" font-size="15">données utiles</text>
         <circle r="8" fill="#E0703F"><animateMotion dur="2.5s" repeatCount="indefinite" path="M360 185 H1040"/></circle>
       </g>
       <g class="f">
-        <path d="M1040 240 H860 M540 240 H360" stroke="#7FB98A" stroke-width="3" class="flow"/>
-        <text x="950" y="270" fill="#7FB98A" font-size="15">nouveau modèle</text><text x="450" y="270" fill="#7FB98A" font-size="15">mise à jour OTA</text>
-        <circle r="8" fill="#7FB98A"><animateMotion dur="2.5s" repeatCount="indefinite" path="M1040 240 H360"/></circle>
+        <path d="M1040 240 H860 M540 240 H360" stroke="#3E9B5F" stroke-width="3" class="flow"/>
+        <text x="950" y="270" fill="#3E9B5F" font-size="15">nouveau modèle</text><text x="450" y="270" fill="#3E9B5F" font-size="15">mise à jour OTA</text>
+        <circle r="8" fill="#3E9B5F"><animateMotion dur="2.5s" repeatCount="indefinite" path="M1040 240 H360"/></circle>
       </g>
     </g>
   </svg>
@@ -691,7 +741,7 @@ open(<span class="s">"modele_int8.tflite"</span>, <span class="s">"wb"</span>).w
 <!-- =============== 27. MERCI =============== -->
 <section class="slide top" id="s-end" data-who="Hamadou BA · Mohamed SANOGO · Nicolas CHEVALIER" data-notes="Merci pour votre attention, place aux questions.">
   <canvas id="particles2" style="position:absolute;inset:0;z-index:-1"></canvas>
-  <div class="bgimg strong" data-img="futur"></div><div class="shade"></div>
+  <div class="bgimg panel" data-img="futur"></div>
   <img class="logo in" src="data:image/png;base64,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" alt="Université Le Havre Normandie">
   <div style="margin-top:170px">
     <h1 class="in d1" style="font-size:140px;letter-spacing:-.04em;line-height:1">Merci<span class="accent">.</span></h1>
@@ -816,8 +866,8 @@ function particles(id){
       cx.clearRect(0,0,1600,900);
       for(const p of P){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>1600)p.vx*=-1;if(p.y<0||p.y>900)p.vy*=-1}
       for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){const a=P[i],b=P[j],d=Math.hypot(a.x-b.x,a.y-b.y);
-        if(d<150){cx.strokeStyle=`rgba(224,112,63,${(1-d/150)*.35})`;cx.lineWidth=1;cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.stroke()}}
-      for(const p of P){cx.fillStyle='rgba(243,176,143,.8)';cx.beginPath();cx.arc(p.x,p.y,2,0,7);cx.fill()}
+        if(d<150){cx.strokeStyle=`rgba(190,79,35,${(1-d/150)*.22})`;cx.lineWidth=1;cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.stroke()}}
+      for(const p of P){cx.fillStyle='rgba(190,79,35,.45)';cx.beginPath();cx.arc(p.x,p.y,2,0,7);cx.fill()}
     }
     requestAnimationFrame(loop);
   })();
@@ -837,7 +887,7 @@ particles('particles');particles('particles2');
     const e=document.createElementNS(ns,'line');e.setAttribute('x1',a[0]);e.setAttribute('y1',a[1]);e.setAttribute('x2',b[0]);e.setAttribute('y2',b[1]);
     const w=Math.random();e.dataset.w=w;e.setAttribute('stroke','#E0703F');e.setAttribute('stroke-width',(0.6+w*2.4).toFixed(2));e.setAttribute('opacity',(0.25+w*.6).toFixed(2));
     e.style.transition='opacity .8s, stroke-width .8s';svg.appendChild(e);edges.push(e)}
-  for(const l of pos)for(const p of l){const c=document.createElementNS(ns,'circle');c.setAttribute('cx',p[0]);c.setAttribute('cy',p[1]);c.setAttribute('r',15);c.setAttribute('fill','#262625');c.setAttribute('stroke','#E0703F');c.setAttribute('stroke-width',2);svg.appendChild(c)}
+  for(const l of pos)for(const p of l){const c=document.createElementNS(ns,'circle');c.setAttribute('cx',p[0]);c.setAttribute('cy',p[1]);c.setAttribute('r',15);c.setAttribute('fill','#FFFFFF');c.setAttribute('stroke','#E0703F');c.setAttribute('stroke-width',2);svg.appendChild(c)}
   const slide=svg.closest('.slide');
   setInterval(()=>{if(!slide.classList.contains('active'))return;
     const cut=frags(slide).filter(f=>f.classList.contains('on')).length>0;
@@ -854,8 +904,8 @@ const vib={anomaly:false};
       for(let k=0;k<3;k++){t+=1;let v=Math.sin(t*.25)*28+Math.sin(t*.9)*10+(Math.random()-.5)*10;
         if(vib.anomaly)v+=Math.sin(t*.07)*40+(Math.random()-.5)*60+(t%40<4?90:0);buf.push(v);if(buf.length>W/2)buf.shift()}
       cx.clearRect(0,0,W,H);
-      cx.strokeStyle='rgba(255,255,255,.07)';for(let y=0;y<H;y+=50){cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke()}
-      cx.strokeStyle=vib.anomaly?'#E0703F':'#7FB98A';cx.lineWidth=2;cx.beginPath();
+      cx.strokeStyle='rgba(0,0,0,.06)';for(let y=0;y<H;y+=50){cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke()}
+      cx.strokeStyle=vib.anomaly?'#BE4F23':'#3E9B5F';cx.lineWidth=2;cx.beginPath();
       buf.forEach((v,i)=>{const x=i*2,y=H/2-v;i?cx.lineTo(x,y):cx.moveTo(x,y)});cx.stroke();
       score+=((vib.anomaly?.92:.06)-score)*.04;
       sc.style.width=(score*100)+'%';sv.textContent=score.toFixed(2);
@@ -885,7 +935,7 @@ const vib={anomaly:false};
 /* ---------- Paquets de données brutes (cloud vs TinyML) ---------- */
 (function(){
   const g=document.getElementById('rawpackets'),ns='http://www.w3.org/2000/svg',ps=[];
-  for(let i=0;i<26;i++){const r=document.createElementNS(ns,'rect');r.setAttribute('width',16);r.setAttribute('height',10);r.setAttribute('rx',2);r.setAttribute('fill','#9a948e');g.appendChild(r);ps.push({r,x:210+i*25,y:110+(Math.random()-.5)*14})}
+  for(let i=0;i<26;i++){const r=document.createElementNS(ns,'rect');r.setAttribute('width',16);r.setAttribute('height',10);r.setAttribute('rx',2);r.setAttribute('fill','#CFCAC4');g.appendChild(r);ps.push({r,x:210+i*25,y:110+(Math.random()-.5)*14})}
   (function loop(){if(g.closest('.slide').classList.contains('active'))ps.forEach(p=>{p.x+=3.2;if(p.x>850)p.x=210;p.r.setAttribute('x',p.x);p.r.setAttribute('y',p.y)});requestAnimationFrame(loop)})();
 })();
 
