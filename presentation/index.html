@@ -277,7 +277,7 @@ svg text[fill="#E0703F"]{fill:#BE4F23}
     <div class="card pcard in d4">
       <div class="speaker" style="margin:0 0 26px"><div class="av">MS</div><div><div class="n">Mohamed SANOGO</div><div class="tag">Parties 4 et 5</div></div></div>
       <h3>Bénéfices, applications et limites</h3>
-      <ul class="plist"><li>Réactivité, confidentialité, énergie</li><li>Démo : surveillance d'un moteur</li><li>Limites, sécurité, perspectives</li><li>Conclusion</li></ul>
+      <ul class="plist"><li>Réactivité, confidentialité, énergie</li><li>Exemple : surveillance d'un moteur</li><li>Limites, sécurité, perspectives</li><li>Conclusion</li></ul>
     </div>
   </div>
 </section>
@@ -515,8 +515,8 @@ svg text[fill="#E0703F"]{fill:#BE4F23}
 </section>
 
 <!-- =============== 13. TABLEAU COMPARAISON + CAS D'ÉTUDE =============== -->
-<section class="slide" data-who="Hamadou BA" data-notes="Synthèse en tableau. Les deux approches sont complémentaires : architecture hybride. Puis notre fil rouge : un moteur, un accéléromètre et un ESP32 qui détecte les vibrations anormales. Je passe la parole à Nicolas pour les principes techniques.">
-  <div class="kicker in">1.10 · Synthèse &amp; fil rouge</div>
+<section class="slide" data-who="Hamadou BA" data-notes="Synthèse en tableau. Les deux approches sont complémentaires : architecture hybride. Puis l'exemple que nous utilisons pour illustrer : un moteur, un accéléromètre et un ESP32 qui détecterait les vibrations anormales. C'est un scénario typique de la littérature, pas un montage que nous avons réalisé. Je passe la parole à Nicolas pour les principes techniques.">
+  <div class="kicker in">1.10 · Synthèse</div>
   <h2 class="in d1">Ce qui change <span class="accent">vraiment</span></h2>
   <table class="t" style="margin-top:20px;max-width:1150px">
     <tr><th>Critère</th><th>Cloud</th><th>TinyML</th></tr>
@@ -527,7 +527,7 @@ svg text[fill="#E0703F"]{fill:#BE4F23}
     <tr class="f"><td>Taille des modèles</td><td>Illimitée</td><td>Quelques Ko</td></tr>
   </table>
   <div class="card hl f" style="margin-top:30px;max-width:1150px;display:flex;gap:24px;align-items:center">
-    <div class="ic"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg></div><div><div class="tag">Notre fil rouge</div><h3 style="margin:4px 0 0">Détecter les vibrations anormales d'un moteur avec un <span class="accent">ESP32</span> + accéléromètre</h3></div>
+    <div class="ic"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg></div><div><div class="tag">Exemple illustratif</div><h3 style="margin:4px 0 0">Détecter les vibrations anormales d'un moteur avec un <span class="accent">ESP32</span> + accéléromètre</h3></div>
   </div>
 </section>
 
@@ -651,7 +651,7 @@ open(<span class="s">"modele_int8.tflite"</span>, <span class="s">"wb"</span>).w
 </section>
 
 <!-- =============== 19. MATÉRIEL =============== -->
-<section class="slide" data-who="Nicolas CHEVALIER" data-notes="Trois puces représentatives. ESP32-S3 : Xtensa 240 MHz, 512 Ko SRAM, instructions SIMD, Wi-Fi. ESP32-P4 : RISC-V 400 MHz, jusqu'à 32 Mo de PSRAM, extensions IA. STM32N6 : Cortex-M55 à 800 MHz avec un vrai NPU Neural-ART de 600 GOPS. Pour notre moteur, un ESP32 suffit largement.">
+<section class="slide" data-who="Nicolas CHEVALIER" data-notes="Trois puces représentatives. ESP32-S3 : Xtensa 240 MHz, 512 Ko SRAM, instructions SIMD, Wi-Fi. ESP32-P4 : RISC-V 400 MHz, jusqu'à 32 Mo de PSRAM, extensions IA. STM32N6 : Cortex-M55 à 800 MHz avec un vrai NPU Neural-ART de 600 GOPS. Pour surveiller un moteur, un ESP32 suffit largement.">
   <div class="kicker in">3.1 · Matériel</div>
   <h2 class="in d1">Des puces de plus en plus <span class="accent">intelligentes</span></h2>
   <div class="grid g3" style="margin-top:36px">
@@ -665,7 +665,7 @@ open(<span class="s">"modele_int8.tflite"</span>, <span class="s">"wb"</span>).w
       <div class="spec"><span>Cœur</span><b>Cortex-M55 · 800 MHz</b></div><div class="spec"><span>NPU</span><b>Neural-ART · 600 GOPS</b></div><div class="spec"><span>Efficacité</span><b>~3 TOPS/W</b></div><div class="spec"><span>SRAM</span><b>4,2 Mo</b></div>
       <div class="tag" style="margin-top:14px">Fréquence</div><div class="meter"><i data-w="100"></i></div></div>
   </div>
-  <p class="f" style="margin-top:30px">Pour notre moteur : un <b class="accent">ESP32</b> suffit largement, et son Wi-Fi envoie les alertes.</p>
+  <p class="f" style="margin-top:30px">Pour surveiller un moteur : un <b class="accent">ESP32</b> suffit largement, et son Wi-Fi envoie les alertes.</p>
 </section>
 
 <!-- =============== 20. OUTILS =============== -->
@@ -713,9 +713,10 @@ open(<span class="s">"modele_int8.tflite"</span>, <span class="s">"wb"</span>).w
 </section>
 
 <!-- =============== 22. INDUSTRIE / DEMO VIBRATIONS =============== -->
-<section class="slide" data-who="Mohamed SANOGO" data-notes="Notre cas d'usage. Le signal de vibration défile en temps réel. Cliquer pour injecter une anomalie : le score du modèle dépasse le seuil et l'ESP32 envoie une alerte. Attention : détecter un comportement inhabituel n'est pas prédire une panne. C'est un premier niveau de surveillance.">
-  <div class="kicker in">4.2 · Industrie</div>
-  <h2 class="in d1">Démo : un moteur sous <span class="accent">surveillance</span></h2>
+<section class="slide" data-who="Mohamed SANOGO" data-notes="Scénario illustratif, simulé dans la page : ce n'est pas une mesure réelle ni un montage que nous avons fait. Le signal de vibration défile. Cliquer pour injecter une anomalie : le score du modèle dépasse le seuil et l'ESP32 envoie une alerte. Attention : détecter un comportement inhabituel n'est pas prédire une panne. C'est un premier niveau de surveillance.">
+  <div class="kicker in">4.2 · Industrie · scénario illustratif</div>
+  <h2 class="in d1">Simulation : un moteur sous <span class="accent">surveillance</span></h2>
+  <p class="tag in d2" style="margin-top:4px">Signal simulé, à titre d'illustration</p>
   <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:40px;margin-top:20px">
     <div class="card in d2" style="padding:20px">
       <div style="display:flex;justify-content:space-between" class="tag"><span>accéléromètre · axe Z</span><span id="vib-state" class="ok">● NORMAL</span></div>

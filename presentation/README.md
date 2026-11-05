@@ -11,7 +11,7 @@ Ouvrir `index.html` dans Chrome / Edge / Firefox, puis **F** pour le plein écra
 | F · Début · Fin · H | Plein écran · première · dernière diapo · aide |
 
 Diapo « Bénéfices » : cliquer sur chaque carte pour la retourner.
-Diapo « Démo moteur » : un clic injecte le défaut, l'alerte se déclenche.
+Diapo « Simulation moteur » (scénario illustratif, signal simulé) : un clic injecte le défaut, l'alerte se déclenche.
 
 Répartition : diapos 1–15 Hamadou BA · 16–23 Nicolas CHEVALIER · 24–31 Mohamed SANOGO (le nom s'affiche en bas à gauche).
 

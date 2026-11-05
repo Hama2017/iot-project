@@ -345,11 +345,12 @@ Dans un système TinyML, le traitement suit une boucle locale composée de cinq
 \label{fig:boucle}
 \end{figure}
 
-Le listing~\ref{lst:boucle} montre, sous forme simplifiée, la structure du
-programme principal d'un ESP32 qui applique ce principe. Le modèle est
+Le listing~\ref{lst:boucle} donne, à titre d'illustration, un exemple simplifié
+de la structure que pourrait avoir le programme principal d'un ESP32 appliquant
+ce principe (pseudo-code, non issu d'une réalisation). Le modèle est
 interrogé à chaque fenêtre de mesures et seule une alerte est publiée.
 
-\begin{lstlisting}[language=C++, caption={Structure simplifiée de la boucle d'inférence sur ESP32.}, label={lst:boucle}]
+\begin{lstlisting}[language=C++, caption={Exemple illustratif (pseudo-code) d'une boucle d'inférence sur ESP32.}, label={lst:boucle}]
 void loop() {
   // 1. Acquisition : une fenêtre de 1 s à 1 kHz sur 3 axes
   lire_accelerometre(fenetre, 1000);
@@ -434,14 +435,16 @@ résultats de nombreux objets, réalise les analyses lourdes et ré-entraîne
 périodiquement les modèles, qui sont ensuite redéployés dans les objets. Cette
 complémentarité est discutée dans la partie~\ref{ch:limites}.
 
-\subsection{Le cas d'étude retenu}
+\subsection{Un scénario illustratif}
 
-Pour illustrer concrètement ces principes, ce rapport s'appuie sur un exemple
-fil rouge : la \textbf{détection d'anomalies vibratoires sur un moteur}. Un
-accéléromètre (de type MPU6050 ou ADXL345) est fixé sur le carter du moteur et
-relié à un ESP32. Un petit modèle, entraîné sur ordinateur à partir de mesures
-en fonctionnement normal, est quantifié puis intégré au firmware. L'ESP32 analyse
-chaque seconde de vibrations et publie une alerte lorsque le comportement
-s'écarte de la normale. Ce scénario mobilise toutes les briques étudiées dans
-les parties suivantes : pipeline de développement, compression du modèle,
+Pour illustrer concrètement ces principes, ce rapport utilise un scénario
+d'application typique du TinyML, souvent cité dans la littérature : la
+\textbf{détection d'anomalies vibratoires sur un moteur}. Il ne s'agit pas d'une
+réalisation menée dans le cadre de ce travail, mais d'un exemple destiné à
+rendre les notions plus concrètes. Dans un tel système, un accéléromètre serait
+fixé sur le carter du moteur et relié à un ESP32. Un petit modèle, entraîné sur
+ordinateur à partir de mesures en fonctionnement normal, serait quantifié puis
+intégré au firmware. L'ESP32 analyserait chaque seconde de vibrations et
+publierait une alerte lorsque le comportement s'écarte de la normale. Ce
+scénario permet de relier toutes les briques étudiées dans les parties suivantes : pipeline de développement, compression du modèle,
 matériel et outils, bénéfices et limites.
