@@ -7,13 +7,13 @@ Ouvrir `index.html` dans Chrome / Edge / Firefox, puis **F** pour le plein écra
 | → / Espace / clic | Élément suivant, puis diapo suivante |
 | ← | Retour |
 | **N** | Notes de l'orateur (texte à dire, par diapo) |
-| **T** / **R** | Chronomètre 30 min (démarrer-pause / remise à zéro) |
+| Chrono | démarre au premier passage ; clic dessus = remise à zéro ; T = pause |
 | F · Début · Fin · H | Plein écran · première · dernière diapo · aide |
 
 Diapo « Bénéfices » : cliquer sur chaque carte pour la retourner.
 Diapo « Démo moteur » : un clic injecte le défaut, l'alerte se déclenche.
 
-Répartition : diapos 1–14 Hamadou BA · 15–22 Mohamed SANOGO · 23–30 Nicolas CHEVALIER (le nom s'affiche en bas à gauche).
+Répartition : diapos 1–15 Hamadou BA · 16–23 Mohamed SANOGO · 24–31 Nicolas CHEVALIER (le nom s'affiche en bas à gauche).
 
 Les images de fond (générées avec Higgsfield) se chargent depuis Internet.
 Pour présenter **hors ligne**, lancer une fois `./telecharger_images.sh` (dossier `img/`).

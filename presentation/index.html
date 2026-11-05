@@ -205,6 +205,40 @@ svg text[fill="#E0703F"]{fill:#BE4F23}
 .section .speaker{margin-top:44px}
 .mono{font-family:"JetBrains Mono",monospace}
 .accent{color:var(--or)}
+
+/* ---- programme ---- */
+.pcard{padding:34px 32px}
+.pcard h3{font-size:26px;line-height:1.2;margin-bottom:18px}
+.plist{list-style:none}
+.plist li{font-size:20px;color:var(--tx2);padding:9px 0 9px 22px;position:relative}
+.plist li::before{content:"";position:absolute;left:0;top:19px;width:7px;height:7px;border-radius:50%;background:var(--or)}
+/* ---- icônes : fond seul ---- */
+.card .ic,.ic{border:none!important;box-shadow:none}
+/* ---- HUD discret ---- */
+#hud{right:22px;bottom:18px;gap:10px;font:500 14px Inter,sans-serif}
+#count{background:rgba(255,255,255,.9);color:#1D1D1F;padding:6px 12px;border-radius:99px;box-shadow:0 4px 18px rgba(0,0,0,.08);font-variant-numeric:tabular-nums}
+#timer{all:unset;cursor:pointer;background:rgba(255,255,255,.9);color:#8E8E93;padding:6px 12px;border-radius:99px;box-shadow:0 4px 18px rgba(0,0,0,.08);font:500 14px Inter,sans-serif;font-variant-numeric:tabular-nums;transition:color .3s}
+#timer.run{color:#1D1D1F}
+#timer.warn{color:var(--or)}
+#timer:hover{color:var(--or)}
+#who{bottom:24px;left:24px;font:500 14px Inter,sans-serif}
+/* ---- animations plus fluides ---- */
+.slide{transition:opacity .9s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);transform:translate3d(0,24px,0);filter:none;will-change:opacity,transform}
+.slide.past{transform:translate3d(0,-24px,0)}
+.slide.active{transform:none;filter:none}
+.in{transform:translate3d(0,18px,0);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1)}
+.active .d1{transition-delay:.12s}.active .d2{transition-delay:.22s}.active .d3{transition-delay:.32s}.active .d4{transition-delay:.42s}.active .d5{transition-delay:.52s}.active .d6{transition-delay:.62s}.active .d7{transition-delay:.72s}.active .d8{transition-delay:.82s}
+.f{transform:translate3d(0,14px,0);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
+.layer.f{transform:translate3d(-24px,0,0)}
+#s-title h1 span{transform:translate3d(0,40px,0);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.3s cubic-bezier(.22,1,.36,1)}
+.bgimg.panel{transform:scale(1.03)}
+.active .bgimg.panel{transition:opacity 1.4s cubic-bezier(.22,1,.36,1),transform 2.2s cubic-bezier(.22,1,.36,1)}
+.card{transition:opacity .8s cubic-bezier(.22,1,.36,1),transform 1s cubic-bezier(.22,1,.36,1),box-shadow .4s}
+.card:hover{box-shadow:0 1px 2px rgba(0,0,0,.03),0 18px 50px -14px rgba(0,0,0,.16)}
+.flip .inner{transition:transform 1s cubic-bezier(.22,1,.36,1)}
+.barrow .fill,.meter i{transition:width 1.8s cubic-bezier(.22,1,.36,1)}
+.qcell .fv,.qcell .iv{transition:all .8s cubic-bezier(.22,1,.36,1)}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01s!important;animation:none!important}}
 </style>
 </head>
 <body>
@@ -223,6 +257,29 @@ svg text[fill="#E0703F"]{fill:#BE4F23}
   <div class="in d7" style="position:absolute;left:96px;bottom:80px;display:flex;flex-direction:column;gap:22px">
     <div><div class="tag">Présenté par</div><div style="font:500 22px 'Space Grotesk';margin-top:6px">Hamadou BA · Mohamed SANOGO · Nicolas CHEVALIER</div></div>
     <div><div class="tag">Encadrant</div><div style="font:500 22px 'Space Grotesk';margin-top:6px">M. Claude DUVALLET</div></div>
+  </div>
+</section>
+
+<!-- =============== 1b. AU PROGRAMME =============== -->
+<section class="slide" data-who="Hamadou BA · Mohamed SANOGO · Nicolas CHEVALIER" data-notes="Voici le déroulé : Hamadou pose les bases (IoT, AIoT, TinyML), Mohamed explique comment ça marche techniquement et sur quel matériel, Nicolas présente les bénéfices, les applications, les limites et conclut.">
+  <div class="kicker in">Au programme</div>
+  <h2 class="in d1">Trois parties, <span class="accent">trois voix</span></h2>
+  <div class="grid g3 prog" style="margin-top:56px">
+    <div class="card pcard in d2">
+      <div class="speaker" style="margin:0 0 26px"><div class="av">HB</div><div><div class="n">Hamadou BA</div><div class="tag">Partie 1</div></div></div>
+      <h3>De l'IoT à l'AIoT et au TinyML</h3>
+      <ul class="plist"><li>L'objet connecté et l'architecture IoT</li><li>Les limites du « tout cloud »</li><li>AIoT et TinyML : définitions, contraintes</li><li>Cloud ou inférence locale ?</li></ul>
+    </div>
+    <div class="card pcard in d3">
+      <div class="speaker" style="margin:0 0 26px"><div class="av">MS</div><div><div class="n">Mohamed SANOGO</div><div class="tag">Parties 2 et 3</div></div></div>
+      <h3>Principes techniques, matériel et outils</h3>
+      <ul class="plist"><li>Le pipeline de développement</li><li>Quantification, élagage, distillation</li><li>ESP32, STM32N6 : le matériel</li><li>TFLM, Edge Impulse : les outils</li></ul>
+    </div>
+    <div class="card pcard in d4">
+      <div class="speaker" style="margin:0 0 26px"><div class="av">NC</div><div><div class="n">Nicolas CHEVALIER</div><div class="tag">Parties 4 et 5</div></div></div>
+      <h3>Bénéfices, applications et limites</h3>
+      <ul class="plist"><li>Réactivité, confidentialité, énergie</li><li>Démo : surveillance d'un moteur</li><li>Limites, sécurité, perspectives</li><li>Conclusion</li></ul>
+    </div>
   </div>
 </section>
 
@@ -757,11 +814,11 @@ open(<span class="s">"modele_int8.tflite"</span>, <span class="s">"wb"</span>).w
 
 <div id="bar"></div>
 <div id="who"><span class="dot"></span><span id="whoname"></span></div>
-<div id="hud"><span id="timer" title="Chronomètre (T pour démarrer / pause)">00:00</span><span id="count"></span></div>
+<div id="hud"><button id="timer" title="Temps écoulé · cliquer pour remettre à zéro">00:00</button><span id="count"></span></div>
 <div id="notes"><h4>NOTES DE L'ORATEUR</h4><div id="notestext"></div></div>
 <div id="help"><div>
 → / Espace / clic : suivant &nbsp;·&nbsp; ← : précédent<br>
-N : notes de l'orateur &nbsp;·&nbsp; T : chronomètre (démarrer / pause) &nbsp;·&nbsp; R : remettre à zéro<br>
+N : notes de l'orateur &nbsp;·&nbsp; T : pause du chrono · clic sur le chrono : remise à zéro &nbsp;·&nbsp; R : remettre à zéro<br>
 F : plein écran &nbsp;·&nbsp; Début / Fin : première / dernière diapo &nbsp;·&nbsp; H : cette aide
 </div></div>
 
@@ -807,7 +864,7 @@ function show(i,fromEnd){
   document.getElementById('notestext').innerHTML=slides[i].dataset.notes||'';
   try{history.replaceState(null,'','#'+(i+1))}catch(e){}
 }
-function next(){const fs=frags(slides[cur]);if(step<fs.length){fs[step].classList.add('on');runAction(fs[step]);step++}else show(cur+1)}
+function next(){startTimer();const fs=frags(slides[cur]);if(step<fs.length){fs[step].classList.add('on');runAction(fs[step]);step++}else show(cur+1)}
 function prev(){if(step>0){step--;const f=frags(slides[cur])[step];f.classList.remove('on');undoAction(f)}else if(cur>0)show(cur-1,true)}
 addEventListener('keydown',e=>{
   const k=e.key;
@@ -942,9 +999,11 @@ const vib={anomaly:false};
 /* ---------- Chronomètre 30 min ---------- */
 let tStart=null,tAcc=0,tInt=null;
 function fmt(ms){const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
-function upd(){const ms=tAcc+(tStart?Date.now()-tStart:0),el=document.getElementById('timer');el.textContent=fmt(ms)+' / 30:00';el.classList.toggle('warn',ms>27*60000)}
-function toggleTimer(){if(tStart){tAcc+=Date.now()-tStart;tStart=null;clearInterval(tInt)}else{tStart=Date.now();tInt=setInterval(upd,500)}upd()}
-function resetTimer(){tStart=null;tAcc=0;clearInterval(tInt);upd()}
+function upd(){const ms=tAcc+(tStart?Date.now()-tStart:0),el=document.getElementById('timer');el.textContent=fmt(ms);el.classList.toggle('run',!!tStart);el.classList.toggle('warn',ms>28*60000)}
+function startTimer(){if(!tStart){tStart=Date.now();clearInterval(tInt);tInt=setInterval(upd,250)}upd()}
+function toggleTimer(){if(tStart){tAcc+=Date.now()-tStart;tStart=null;clearInterval(tInt)}else startTimer();upd()}
+function resetTimer(){tAcc=0;tStart=Date.now();clearInterval(tInt);tInt=setInterval(upd,250);upd()}
+document.getElementById('timer').addEventListener('click',e=>{e.stopPropagation();resetTimer()});
 upd();
 
 show(Math.max(0,(parseInt(location.hash.slice(1))||1)-1));
