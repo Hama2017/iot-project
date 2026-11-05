@@ -1,0 +1,34 @@
+% =====================================================================
+%  Conclusion générale
+% =====================================================================
+\chapter*{Conclusion générale}
+\addcontentsline{toc}{chapter}{Conclusion générale}
+\markboth{Conclusion générale}{}
+
+Ce rapport a montré comment l'intelligence artificielle peut quitter les
+centres de données pour s'installer au cœur des objets connectés. Partant de
+l'architecture classique de l'IoT, où l'objet se contente de mesurer et de
+transmettre, nous avons vu que l'AIoT donne aux systèmes connectés la capacité
+d'interpréter leurs données, et que le TinyML pousse cette logique jusqu'aux
+microcontrôleurs les plus modestes.
+
+Cette évolution repose sur une séparation nette entre l'entraînement, réalisé
+sur des machines puissantes, et l'inférence, seule exécutée dans l'objet. Elle
+n'est possible que grâce à un pipeline de développement rigoureux et à des
+techniques de compression (quantification, élagage, distillation) capables de
+réduire la taille d'un modèle d'un ou deux ordres de grandeur, ainsi qu'à des
+microcontrôleurs et des outils logiciels de plus en plus adaptés.
+
+Les bénéfices sont réels : réactivité accrue, fonctionnement en l'absence de
+réseau, réduction des données transmises et donc meilleure maîtrise de la
+confidentialité et, souvent, de la consommation énergétique. Ils doivent
+cependant être nuancés : la latence n'est pas nulle, le calcul local consomme
+lui aussi de l'énergie, la fiabilité dépend fortement des données
+d'entraînement et l'évolution des modèles déployés reste délicate.
+
+Le TinyML ne remplace donc pas le cloud : il le complète. L'avenir de l'AIoT se
+dessine comme une intelligence distribuée, dans laquelle chaque niveau (objet,
+passerelle, cloud) exécute les traitements qui lui conviennent le mieux. Notre
+exemple de détection d'anomalies vibratoires sur ESP32 illustre bien cette
+répartition : l'objet surveille et alerte en temps réel, tandis que le cloud
+supervise, archive et améliore le modèle au fil du temps.

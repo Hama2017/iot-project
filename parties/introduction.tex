@@ -1,0 +1,49 @@
+% =====================================================================
+%  Introduction générale
+% =====================================================================
+\chapter*{Introduction générale}
+\addcontentsline{toc}{chapter}{Introduction générale}
+\markboth{Introduction générale}{}
+
+En une quinzaine d'années, l'Internet des objets (\emph{Internet of Things}, IoT)
+est passé du statut de concept à celui d'infrastructure du quotidien :
+thermostats, montres, compteurs électriques, machines industrielles ou capteurs
+agricoles sont désormais connectés. Le cabinet IoT Analytics estimait à environ
+18,8~milliards le nombre d'objets connectés actifs dans le monde fin
+2024~\cite{iotanalytics2024}. Ces objets produisent un volume de données
+considérable, que l'architecture « classique » de l'IoT envoie vers le cloud pour
+y être stockées, analysées et transformées en décisions.
+
+Ce modèle centralisé montre aujourd'hui ses limites. Transmettre en permanence
+des mesures brutes consomme de la bande passante et de l'énergie, introduit une
+latence qui dépend de la qualité du réseau, rend le système inopérant lorsque la
+connexion est coupée et expose des données parfois sensibles (sons, images,
+mesures physiologiques). Le paradigme de l'\emph{edge computing} propose de
+rapprocher le traitement de la source des données~\cite{shi2016edge}.
+
+L'étape suivante consiste à doter les objets eux-mêmes d'une capacité
+d'analyse : c'est l'\textbf{AIoT}, contraction d'\emph{Artificial Intelligence}
+et d'\emph{Internet of Things}~\cite{zhang2021aiot}. Lorsque cette intelligence
+est logée dans les composants les plus modestes de la chaîne, des
+microcontrôleurs de quelques euros fonctionnant sur pile, on parle de
+\textbf{TinyML}~\cite{warden2019tinyml,banbury2020benchmarking}. Un capteur
+de vibrations ne transmet plus des milliers d'échantillons par seconde : il
+signale simplement « fonctionnement anormal détecté ».
+
+\begin{encadre}[title={Problématique}]
+Comment faire fonctionner des modèles d'intelligence artificielle, conçus
+habituellement pour des serveurs dotés de gigaoctets de mémoire, sur des objets
+connectés qui ne disposent que de quelques centaines de kilooctets, et quels
+bénéfices et limites cette approche apporte-t-elle aux systèmes IoT ?
+\end{encadre}
+
+Pour y répondre, ce rapport est organisé en cinq parties. La
+\textbf{partie~1} pose les bases : objet connecté, architecture d'un système IoT,
+définition de l'AIoT et du TinyML, et comparaison entre une architecture centrée
+sur le cloud et une architecture où l'inférence est réalisée localement. La
+\textbf{partie~2} détaille les principes techniques du TinyML, en particulier
+le pipeline de développement et les techniques de compression des modèles. La
+\textbf{partie~3} présente le matériel et la chaîne d'outils logiciels. La
+\textbf{partie~4} examine les bénéfices de l'approche et ses domaines
+d'application. Enfin, la \textbf{partie~5} discute les limites, les défis et les
+perspectives d'avenir.

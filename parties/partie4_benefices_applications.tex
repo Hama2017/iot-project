@@ -1,0 +1,135 @@
+% =====================================================================
+%  PARTIE 4 — Bénéfices et domaines d'application
+% =====================================================================
+\chapter{Bénéfices et domaines d'application}
+\label{ch:benefices}
+
+\section{Les bénéfices de l'AIoT et du TinyML}
+
+L'association de l'intelligence artificielle et de l'Internet des objets,
+appelée AIoT, permet aux équipements connectés d'analyser les données qu'ils
+collectent afin de reconnaître des situations ou de détecter des anomalies. Le
+TinyML correspond plus précisément à l'exécution de modèles d'apprentissage
+automatique sur des dispositifs disposant de ressources limitées, notamment des
+microcontrôleurs. Cette approche déplace une partie de l'intelligence au plus
+près des capteurs, plutôt que de transmettre systématiquement les données à un
+serveur distant. Elle présente plusieurs avantages en matière de réactivité, de
+confidentialité et de consommation énergétique~\cite{ray2022review}.
+
+\subsection{Une meilleure réactivité et une moindre dépendance au réseau}
+
+Dans une architecture reposant sur le cloud, les données doivent être
+transmises à un serveur avant d'être analysées. Le délai de réponse dépend donc
+non seulement du calcul, mais aussi de la connexion réseau et des échanges avec
+le serveur. Avec le TinyML, l'analyse peut être réalisée directement dans
+l'objet connecté, ce qui évite cet aller-retour pour les décisions prises
+localement.
+
+Cette organisation est particulièrement intéressante lorsqu'un système doit
+réagir rapidement, par exemple pour reconnaître un événement sonore ou détecter
+un comportement inhabituel d'une machine. Elle permet également de maintenir
+certaines fonctions d'analyse lorsque la connexion Internet est indisponible, à
+condition que ces fonctions aient été conçues pour fonctionner de manière
+autonome.
+
+Il serait toutefois incorrect de parler de \og latence zéro\fg{}.
+L'acquisition des données, leur préparation et l'exécution du modèle
+nécessitent toujours du temps. Le bénéfice correspond à une réduction de la
+latence et de sa dépendance au réseau, et non à sa disparition.
+
+\subsection{Une meilleure maîtrise de la confidentialité des données}
+
+Les objets connectés peuvent collecter des informations sensibles, comme des
+enregistrements audio, des données de mouvement ou des mesures physiologiques.
+Lorsque ces données sont systématiquement envoyées vers un serveur, leur
+traitement implique davantage de transferts et de stockage à distance.
+L'inférence locale permet de limiter ces échanges en analysant les informations
+directement sur l'appareil.
+
+Par exemple, un dispositif de reconnaissance sonore peut analyser un signal
+audio localement et ne transmettre que le résultat de la détection. Selon
+l'architecture retenue, il devient ainsi possible de communiquer une alerte
+plutôt que l'ensemble de l'enregistrement. Le TinyML contribue donc à réduire
+la quantité de données brutes qui quittent l'objet connecté.
+
+Cet avantage ne signifie pas que la confidentialité est automatiquement
+garantie. Certains systèmes peuvent encore transmettre des données pour
+l'entraînement, le suivi ou d'autres services. Il faut donc distinguer la
+possibilité de traiter les données localement du choix réel de ne pas les
+transmettre.
+
+\subsection{Une réduction possible de la consommation énergétique}
+
+L'autonomie constitue une contrainte importante pour les objets connectés
+alimentés par batterie. Les communications sans fil consomment de l'énergie,
+notamment lorsque l'appareil transmet fréquemment des mesures. En analysant les
+données localement et en ne communiquant que les résultats utiles, le TinyML
+peut réduire le recours à la transmission radio~\cite{warden2019tinyml}.
+
+Cependant, le calcul local consomme lui aussi de l'énergie. Le gain final
+dépend donc de plusieurs paramètres : la complexité du modèle, la fréquence des
+analyses, la consommation des capteurs, les modes de veille et la fréquence des
+communications. Une analyse locale bien dimensionnée peut améliorer
+l'autonomie, mais cet avantage doit être mesuré sur le dispositif complet
+plutôt que supposé à partir du seul modèle d'IA~\cite{banbury2021mlperftiny}.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\linewidth}{>{\bfseries}l X X}
+\toprule
+Bénéfice & Ce que le TinyML apporte & Nuance à garder en tête \\
+\midrule
+Réactivité      & Décision locale, sans aller-retour réseau & La latence est réduite, pas supprimée \\
+Fonctionnement hors ligne & Analyse maintenue sans connexion & Seulement pour les fonctions conçues pour cela \\
+Confidentialité & Les données brutes peuvent rester dans l'objet & Dépend des choix réels de transmission \\
+Énergie         & Moins de transmissions radio & Le calcul local consomme aussi \\
+Coût            & Moins de données envoyées et stockées dans le cloud & Coût de développement et de mise à jour \\
+\bottomrule
+\end{tabularx}
+\caption{Synthèse des bénéfices du TinyML et de leurs limites.}
+\label{tab:benefices}
+\end{table}
+
+\section{Domaines d'application et exemples d'utilisation}
+
+\subsection{Industrie : surveillance des machines et maintenance}
+
+Dans l'industrie, l'apprentissage automatique embarqué peut servir à surveiller
+le fonctionnement des machines et à détecter des signes de dégradation. La
+maintenance prédictive fait notamment partie des applications de l'IA en
+périphérie : l'objectif est d'identifier des défauts avant qu'ils n'entraînent
+des problèmes plus importants~\cite{zhang2021aiot}.
+
+Pour illustrer ce principe, notre projet retient le cas d'un moteur surveillé
+par un capteur de vibrations. Le scénario étudié consiste à analyser les
+mesures sur un microcontrôleur, puis à déclencher une alerte lorsqu'un
+comportement inhabituel est détecté.
+
+L'intérêt recherché est de fournir une information utile au personnel de
+maintenance sans transmettre continuellement toutes les mesures à un serveur.
+Il convient néanmoins de distinguer la détection d'anomalies de la prédiction
+d'une panne : repérer un fonctionnement inhabituel ne permet pas nécessairement
+de déterminer sa cause ou le temps restant avant une défaillance. La détection
+constitue un premier niveau de surveillance ; la prédiction demande une analyse
+et une validation supplémentaires.
+
+\subsection{Maison connectée : reconnaissance de mots-clés et de sons}
+
+La reconnaissance de mots-clés est une application représentative du TinyML ;
+elle fait d'ailleurs partie des tâches de référence du banc d'essai MLPerf
+Tiny~\cite{banbury2021mlperftiny}. Un modèle compact peut être chargé
+d'identifier un nombre limité de commandes vocales sur un appareil disposant de
+peu de mémoire et de puissance de calcul. Cette tâche ciblée se distingue d'une
+conversation complète avec un assistant fondé sur un grand modèle de langage.
+
+L'analyse locale présente ici un double intérêt : réduire les échanges avec un
+serveur et permettre une réaction rapide. Elle peut aussi limiter la
+transmission de données audio lorsque le système est conçu pour ne communiquer
+que les résultats nécessaires.
+
+La reconnaissance reste cependant sensible aux conditions d'utilisation. Le
+bruit ambiant peut perturber la détection et provoquer des erreurs. Pour
+obtenir un système robuste, il faut donc entraîner et tester le modèle avec des
+données représentatives des environnements dans lesquels l'objet sera
+réellement utilisé.

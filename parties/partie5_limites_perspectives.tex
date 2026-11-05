@@ -1,0 +1,106 @@
+% =====================================================================
+%  PARTIE 5 — Limites, défis et perspectives
+% =====================================================================
+\chapter{Limites, défis et perspectives d'avenir}
+\label{ch:limites}
+
+\section{Des ressources matérielles limitées}
+
+La principale difficulté du TinyML consiste à faire fonctionner un modèle utile
+sur un appareil disposant de ressources réduites. La mémoire vive, l'espace de
+stockage, la puissance de calcul et l'énergie disponible limitent la complexité
+des modèles déployables. L'optimisation doit ainsi prendre en compte plusieurs
+critères simultanément : la taille du modèle, sa précision, son temps
+d'exécution et sa consommation~\cite{banbury2020benchmarking}.
+
+Les outils logiciels imposent également des contraintes. TensorFlow Lite for
+Microcontrollers, par exemple, prend en charge un ensemble limité d'opérations
+et nécessite une gestion adaptée de la mémoire~\cite{david2021tflm}. Un modèle
+conçu sur ordinateur ne peut donc pas toujours être transféré directement sur un
+microcontrôleur sans modification.
+
+Ces contraintes conduisent à rechercher un compromis : le modèle le plus
+complexe n'est pas nécessairement le plus pertinent si un modèle plus simple
+répond au besoin tout en consommant moins de ressources.
+
+\section{Une fiabilité dépendante des données et du contexte}
+
+Les performances d'un modèle dépendent des données utilisées pour son
+entraînement et de leur représentativité. Dans les applications vocales, le
+bruit peut dégrader la reconnaissance. Dans les dispositifs portables, les
+mouvements, les différences entre utilisateurs ou les variations de
+positionnement des capteurs peuvent modifier les signaux analysés.
+
+Un modèle peut donc donner de bons résultats pendant les essais puis devenir
+moins fiable lorsque les conditions changent. Il est nécessaire de le tester
+dans des situations variées et de suivre ses performances après le
+déploiement. Cette exigence est particulièrement importante lorsque les erreurs
+peuvent avoir des conséquences sur la surveillance d'un équipement ou sur
+l'interprétation de données de santé.
+
+\section{L'entraînement et l'évolution des modèles}
+
+Dans de nombreux systèmes TinyML, l'entraînement est effectué sur un ordinateur
+ou une infrastructure distante, tandis que le microcontrôleur réalise uniquement
+l'inférence, c'est-à-dire l'utilisation du modèle déjà entraîné. Cette
+séparation s'explique par les besoins généralement plus élevés de
+l'entraînement en mémoire et en puissance de calcul. TensorFlow Lite for
+Microcontrollers ne prend d'ailleurs pas en charge l'entraînement sur
+l'appareil~\cite{tflm-doc}.
+
+Cette organisation soulève la question de l'évolution du système. Lorsque les
+données ou les conditions d'utilisation changent, une nouvelle version du modèle
+peut devenir nécessaire ; elle doit alors être redéployée, par exemple par une
+mise à jour du firmware à distance (OTA).
+
+L'apprentissage directement sur l'appareil constitue une piste d'évolution, des
+travaux ayant montré qu'il est possible d'entraîner partiellement un réseau
+avec moins de 256~Ko de mémoire~\cite{lin2022ondevice}. Il n'est cependant pas
+encore une solution générale pour tous les microcontrôleurs : il reste limité
+par les ressources disponibles et par la complexité supplémentaire qu'il
+introduit.
+
+\section{La sécurité des modèles embarqués}
+
+Placer un modèle dans un objet physique l'expose à de nouvelles menaces : un
+attaquant ayant accès à l'appareil peut tenter d'extraire le modèle de la
+mémoire flash, de le modifier ou de fournir au capteur des entrées conçues pour
+le tromper. La protection de la mémoire (chiffrement de la flash, démarrage
+sécurisé) et la sécurisation des mises à jour OTA, que proposent par exemple
+les ESP32~\cite{espressif-esp32}, font donc partie intégrante de la conception
+d'un système AIoT.
+
+\section{Vers des architectures complémentaires entre l'objet et le cloud}
+
+Le développement du TinyML ne signifie pas nécessairement la disparition du
+cloud. Les deux approches peuvent remplir des rôles complémentaires : l'objet
+exécute les analyses locales compatibles avec ses ressources, tandis qu'une
+infrastructure plus puissante peut prendre en charge l'entraînement et les
+traitements plus exigeants.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=2.4cm]
+  \node[blocv, text width=2.9cm] (o) {Objets TinyML\\\footnotesize inférence locale, alertes};
+  \node[bloc, text width=2.9cm, right=of o] (e) {Passerelle / edge\\\footnotesize agrégation, analyses};
+  \node[bloco, text width=2.9cm, right=of e] (c) {Cloud\\\footnotesize entraînement, supervision};
+  \draw[fleche] ([yshift=4pt]o.east) -- node[above,font=\scriptsize]{résultats} ([yshift=4pt]e.west);
+  \draw[fleche] ([yshift=4pt]e.east) -- node[above,font=\scriptsize]{données utiles} ([yshift=4pt]c.west);
+  \draw[fleche, dashed] ([yshift=-4pt]c.west) -- node[below,font=\scriptsize]{nouveau modèle} ([yshift=-4pt]e.east);
+  \draw[fleche, dashed] ([yshift=-4pt]e.west) -- node[below,font=\scriptsize]{mise à jour OTA} ([yshift=-4pt]o.east);
+\end{tikzpicture}
+\caption{Répartition des traitements dans une architecture AIoT hybride.}
+\label{fig:hybride}
+\end{figure}
+
+Les perspectives reposent notamment sur l'amélioration de l'efficacité des
+modèles et de leur adaptation aux contraintes matérielles. Les travaux récents
+sur la quantification montrent que la recherche vise à réduire les besoins en
+mémoire et en énergie tout en préservant des performances adaptées à
+l'application~\cite{gholami2021survey}. Parallèlement, les microcontrôleurs
+intègrent de plus en plus d'accélérateurs neuronaux dédiés, comme le montre le
+STM32N6 présenté dans la partie~\ref{ch:materiel}.
+
+L'enjeu n'est donc pas de placer toute l'intelligence dans chaque capteur, mais
+de répartir les traitements de façon pertinente selon les besoins de
+réactivité, d'autonomie et de confidentialité.

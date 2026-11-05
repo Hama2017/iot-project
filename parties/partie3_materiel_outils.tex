@@ -1,0 +1,133 @@
+% =====================================================================
+%  PARTIE 3 — Matériel et outils de développement
+% =====================================================================
+\chapter{Matériel et outils de développement}
+\label{ch:materiel}
+
+Les techniques de compression ne suffisent pas à elles seules : leur efficacité
+dépend du matériel sur lequel le modèle est exécuté et des outils logiciels qui
+assurent la conversion et le déploiement. Cette partie présente trois
+architectures représentatives de l'évolution des microcontrôleurs pour le
+TinyML, puis la chaîne d'outils logiciels associée.
+
+\section{Architectures matérielles}
+
+\subsection{ESP32-S3 (Espressif)}
+\begin{itemize}
+  \item \textbf{Cœur} : Xtensa LX7 double cœur à 240~MHz ;
+  \item \textbf{Mémoire} : 512~Ko de SRAM, jusqu'à 8~Mo de PSRAM externe ;
+  \item \textbf{Accélération} : extensions vectorielles (SIMD) pour les calculs 8/16~bits ;
+  \item \textbf{Connectivité} : Wi-Fi et Bluetooth LE intégrés~\cite{espressif-esp32s3}.
+\end{itemize}
+
+\subsection{ESP32-P4 (Espressif)}
+\begin{itemize}
+  \item \textbf{Architecture} : RISC-V double cœur jusqu'à 400~MHz ;
+  \item \textbf{Mémoire} : jusqu'à 32~Mo de PSRAM ;
+  \item \textbf{Accélération} : extensions dédiées à l'IA, traitement d'image matériel ;
+  \item \textbf{Sortie} : 2024~\cite{espressif-esp32p4}.
+\end{itemize}
+
+\subsection{STM32N6 (STMicroelectronics)}
+\begin{itemize}
+  \item \textbf{Cœur} : Arm Cortex-M55 à 800~MHz ;
+  \item \textbf{NPU} : accélérateur neuronal Neural-ART à 600~GOPS ;
+  \item \textbf{Efficacité} : environ 3~TOPS/W ;
+  \item \textbf{Mémoire} : 4,2~Mo de SRAM intégrée~\cite{st-stm32n6}.
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\linewidth}{>{\bfseries}l X X X}
+\toprule
+Critère & ESP32-S3 & ESP32-P4 & STM32N6 \\
+\midrule
+Cœur           & Xtensa LX7, 2 cœurs, 240 MHz & RISC-V, 2 cœurs, 400 MHz & Cortex-M55, 800 MHz \\
+SRAM / PSRAM   & 512 Ko / jusqu'à 8 Mo & 768 Ko / jusqu'à 32 Mo & 4,2 Mo SRAM \\
+Accélération IA & Instructions SIMD & Extensions IA, traitement d'image & NPU Neural-ART (600 GOPS) \\
+Connectivité   & Wi-Fi, BLE & Aucune radio intégrée & Aucune radio intégrée \\
+Usage typique  & Audio, capteurs, petite vision & Vision, interface homme-machine & Vision temps réel, modèles plus lourds \\
+\bottomrule
+\end{tabularx}
+\caption{Comparaison des architectures matérielles pour le TinyML.}
+\label{tab:materiel}
+\end{table}
+
+Ces trois architectures illustrent l'évolution des microcontrôleurs pour le
+TinyML, avec une complexité et des performances croissantes : des instructions
+vectorielles d'un MCU généraliste jusqu'à l'intégration d'un véritable
+accélérateur neuronal. Pour notre cas d'étude (détection d'anomalies
+vibratoires), un ESP32 ou un ESP32-S3 est largement suffisant ; le Wi-Fi
+intégré permet en outre de transmettre les alertes.
+
+\section{Chaîne d'outils logiciels}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=0.6cm]
+  \node[bloco, minimum width=2.8cm] (a) {1. Entraînement\\\footnotesize(TensorFlow / PyTorch)};
+  \node[bloc, minimum width=2.8cm, right=of a] (b) {2. Conversion\\\footnotesize(TFLite Converter)};
+  \node[blocv, minimum width=2.8cm, right=of b] (c) {3. Exécution\\\footnotesize(TFLM / ESP-DL)};
+  \node[blocv, minimum width=2.8cm, right=of c] (d) {4. Firmware\\\footnotesize(ESP-IDF / CubeIDE)};
+  \draw[fleche] (a) -- (b);
+  \draw[fleche] (b) -- (c);
+  \draw[fleche] (c) -- (d);
+\end{tikzpicture}
+\caption{Chaîne d'outils logiciels pour le développement TinyML.}
+\label{fig:outils}
+\end{figure}
+
+\subsection{TensorFlow Lite for Microcontrollers (TFLM)}
+
+TFLM est le moteur d'inférence de référence pour le TinyML~\cite{david2021tflm,tflm-doc} :
+\begin{itemize}
+  \item interpréteur C++ minimaliste, fonctionnant sans système d'exploitation
+        ni allocation dynamique de mémoire ;
+  \item empreinte de quelques dizaines de kilooctets seulement ;
+  \item modèle intégré sous forme de tableau C dans le firmware ;
+  \item \emph{tensor arena} : zone de mémoire statique, réservée à la
+        compilation, qui contient les activations pendant l'inférence.
+\end{itemize}
+
+La conversion d'un fichier \code{.tflite} en tableau C se fait en une ligne de
+commande, puis le modèle est chargé par l'interpréteur (listing~\ref{lst:tflm}).
+
+\begin{lstlisting}[language=C++, caption={Initialisation de l'interpréteur TFLM sur microcontrôleur.}, label={lst:tflm}]
+// Généré par : xxd -i modele_int8.tflite > modele_data.cc
+#include "modele_data.h"
+#include "tensorflow/lite/micro/micro_interpreter.h"
+#include "tensorflow/lite/micro/micro_mutable_op_resolver.h"
+
+constexpr int kTensorArenaSize = 20 * 1024;      // 20 Ko de SRAM
+alignas(16) static uint8_t tensor_arena[kTensorArenaSize];
+
+const tflite::Model* model = tflite::GetModel(modele_data);
+static tflite::MicroMutableOpResolver<3> resolver;
+resolver.AddFullyConnected();
+resolver.AddRelu();
+resolver.AddSoftmax();
+
+static tflite::MicroInterpreter interpreter(model, resolver,
+                                            tensor_arena, kTensorArenaSize);
+interpreter.AllocateTensors();
+\end{lstlisting}
+
+\subsection{Edge Impulse}
+
+Edge Impulse est une plateforme en ligne couvrant l'ensemble du pipeline, de la
+collecte des données au déploiement~\cite{edgeimpulse}. Elle permet
+d'enregistrer des données depuis la carte, de concevoir le prétraitement
+(FFT, MFCC) et le modèle, d'évaluer ses performances estimées sur le
+microcontrôleur cible, puis de générer automatiquement une bibliothèque C++ ou
+Arduino prête à être compilée.
+
+\subsection{Outils spécifiques aux fabricants}
+\begin{itemize}
+  \item \textbf{ESP-DL} (Espressif) : bibliothèque optimisée pour les ESP32, qui
+        exploite leurs instructions vectorielles~\cite{espressif-espdl} ;
+  \item \textbf{STM32Cube.AI} (STMicroelectronics) : outil de conversion et
+        d'optimisation des modèles pour les STM32~\cite{st-cubeai} ;
+  \item \textbf{NXP eIQ} : environnement de développement pour les
+        microcontrôleurs et processeurs NXP~\cite{nxp-eiq}.
+\end{itemize}

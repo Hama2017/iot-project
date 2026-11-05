@@ -1,0 +1,446 @@
+% =====================================================================
+%  PARTIE 1 — De l'IoT à l'AIoT et au TinyML
+% =====================================================================
+\chapter{De l'IoT à l'AIoT et au TinyML}
+\label{ch:fondements}
+
+Avant d'étudier la manière dont un modèle d'intelligence artificielle peut être
+exécuté sur un microcontrôleur, il est nécessaire de préciser le vocabulaire et
+le cadre dans lequel s'inscrit ce travail. Cette partie définit successivement
+l'objet connecté et l'architecture d'un système IoT
+(section~\ref{sec:iot}), l'AIoT (section~\ref{sec:aiot}), le TinyML
+(section~\ref{sec:tinyml}), puis compare les architectures centrées sur le cloud
+à celles où l'inférence est réalisée dans l'objet
+(section~\ref{sec:archi}).
+
+% ---------------------------------------------------------------------
+\section{L'Internet des objets}
+\label{sec:iot}
+
+\subsection{Qu'est-ce qu'un objet connecté ?}
+
+L'expression \emph{Internet of Things} est attribuée à Kevin Ashton, qui
+l'utilise dès 1999 pour décrire des objets capables de collecter eux-mêmes des
+informations sur le monde physique, sans saisie humaine~\cite{ashton2009}. La
+recommandation ITU-T~Y.2060 de l'Union internationale des télécommunications en
+donne une définition de référence : l'IoT est \og une infrastructure mondiale
+pour la société de l'information, qui permet de disposer de services évolués en
+interconnectant des objets (physiques ou virtuels) grâce aux technologies de
+l'information et de la communication interopérables existantes ou en
+évolution\fg{}~\cite{itu2012y2060}.
+
+Un \textbf{objet connecté} est donc un dispositif physique qui associe :
+\begin{itemize}
+  \item un ou plusieurs \textbf{capteurs} qui mesurent une grandeur physique
+        (température, accélération, son, lumière, humidité, pression\dots) ;
+  \item une \textbf{unité de traitement}, le plus souvent un microcontrôleur
+        (MCU), qui pilote les capteurs et met en forme les données ;
+  \item un \textbf{module de communication} (Wi-Fi, Bluetooth Low Energy,
+        LoRaWAN, NB-IoT, Zigbee\dots) qui relie l'objet au réseau ;
+  \item éventuellement des \textbf{actionneurs} (relais, moteur, LED,
+        buzzer) qui agissent sur l'environnement ;
+  \item une \textbf{source d'énergie}, souvent une batterie ou une pile, parfois
+        complétée par de la récupération d'énergie (panneau solaire, vibrations).
+\end{itemize}
+
+La carte ESP32 d'Espressif illustre bien ce type de plateforme : un
+microcontrôleur cadencé à 240~MHz, environ 520~Ko de SRAM, du Wi-Fi et du
+Bluetooth intégrés, pour un coût de quelques euros~\cite{espressif-esp32}.
+La contrainte majeure de ces objets n'est pas tant leur puissance de calcul que
+leur \textbf{budget énergétique} : un capteur installé dans un champ ou sur une
+machine doit souvent fonctionner plusieurs mois, voire plusieurs années, sans
+intervention.
+
+\subsection{Architecture générale d'un système IoT}
+
+Il n'existe pas d'architecture IoT unique, mais la littérature converge vers un
+découpage en couches~\cite{alfuqaha2015,atzori2010}. Le modèle le plus courant
+distingue quatre niveaux, représentés à la figure~\ref{fig:archi-iot} :
+
+\begin{enumerate}
+  \item \textbf{La couche perception} (ou couche objets) regroupe les capteurs et
+        actionneurs. Elle convertit des phénomènes physiques en signaux
+        numériques et, inversement, exécute des commandes.
+  \item \textbf{La couche réseau} (ou transport) achemine les données. Elle
+        s'appuie sur des protocoles radio adaptés aux faibles débits et à la
+        faible consommation (BLE, Zigbee, LoRaWAN, NB-IoT) ainsi que sur des
+        passerelles (\emph{gateways}) qui relaient les messages vers Internet.
+  \item \textbf{La couche traitement} (ou plateforme, \emph{middleware}) stocke,
+        agrège et analyse les données, le plus souvent dans le cloud. On y trouve
+        les bases de données, les tableaux de bord et, aujourd'hui, les modèles
+        d'apprentissage automatique.
+  \item \textbf{La couche application} fournit le service final à l'utilisateur :
+        application mobile, alerte de maintenance, pilotage d'un système
+        d'irrigation, etc.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    couche/.style={draw=#1, fill=#1!12, rounded corners=3pt, minimum width=13.6cm,
+                   minimum height=1.25cm},
+    lbl/.style={font=\bfseries\small, anchor=west, text width=3cm},
+    ex/.style={font=\small, anchor=west, text width=9.6cm}]
+  \node[couche=orange] (app) at (0,4.5) {};
+  \node[lbl] at ($(app.west)+(0.2,0)$) {4. Application};
+  \node[ex]  at ($(app.west)+(3.6,0)$) {Tableaux de bord, applications mobiles, alertes,
+       maintenance, villes et maisons intelligentes};
+  \node[couche=vert] (trt) at (0,3) {};
+  \node[lbl] at ($(trt.west)+(0.2,0)$) {3. Traitement};
+  \node[ex]  at ($(trt.west)+(3.6,0)$) {Cloud / serveurs : stockage, base de données,
+       analyse, entraînement des modèles d'IA};
+  \node[couche=bleu] (res) at (0,1.5) {};
+  \node[lbl] at ($(res.west)+(0.2,0)$) {2. Réseau};
+  \node[ex]  at ($(res.west)+(3.6,0)$) {Wi-Fi, BLE, Zigbee, LoRaWAN, NB-IoT, passerelles ;
+       protocoles MQTT, CoAP, HTTP};
+  \node[couche=gray] (per) at (0,0) {};
+  \node[lbl] at ($(per.west)+(0.2,0)$) {1. Perception};
+  \node[ex]  at ($(per.west)+(3.6,0)$) {Capteurs (température, accéléromètre, micro\dots),
+       actionneurs, microcontrôleurs};
+  \draw[fleche] ($(per.east)+(0.3,0)$) -- node[right,font=\footnotesize,align=left]{données\\montantes} ($(app.east)+(0.3,0)$);
+\end{tikzpicture}
+\caption{Architecture en quatre couches d'un système IoT (d'après~\cite{alfuqaha2015}).}
+\label{fig:archi-iot}
+\end{figure}
+
+Dans ce schéma classique, l'« intelligence » du système réside dans la couche
+traitement. L'objet est un simple producteur de données : il mesure, transmet et
+attend éventuellement un ordre en retour. Cette organisation a l'avantage de la
+simplicité et de la puissance (le cloud dispose de ressources pratiquement
+illimitées), mais elle fait dépendre toute décision de la disponibilité et de la
+qualité du réseau.
+
+\subsection{Les limites du modèle « tout cloud »}
+
+Plusieurs difficultés apparaissent lorsque le nombre d'objets et le volume de
+données augmentent~\cite{shi2016edge} :
+\begin{itemize}
+  \item \textbf{La bande passante} : un accéléromètre échantillonné à 1~kHz sur
+        trois axes en 16~bits produit environ 6~Ko/s, soit plus de 500~Mo par
+        jour et par capteur. Multiplier ce flux par des centaines de machines
+        sature rapidement un réseau LoRaWAN ou NB-IoT, dont les débits se
+        comptent en kilobits par seconde.
+  \item \textbf{La latence} : l'aller-retour vers un serveur ajoute des délais
+        variables, parfois de plusieurs centaines de millisecondes, incompatibles
+        avec certaines réactions (arrêt d'une machine, détection d'une chute).
+  \item \textbf{L'énergie} : sur un objet sur batterie, la transmission radio
+        est souvent le poste de consommation le plus important, bien devant le
+        calcul~\cite{warden2019tinyml}.
+  \item \textbf{La confidentialité} : envoyer en continu le son d'une pièce ou
+        le rythme cardiaque d'une personne multiplie les risques de fuite.
+  \item \textbf{La disponibilité} : sans connexion, l'objet devient « aveugle ».
+\end{itemize}
+Ces limites motivent le déplacement d'une partie de l'analyse vers la
+périphérie du réseau (\emph{edge}), puis vers l'objet lui-même.
+
+% ---------------------------------------------------------------------
+\section{L'AIoT : l'intelligence artificielle au service des objets}
+\label{sec:aiot}
+
+\subsection{Définition}
+
+L'\textbf{AIoT} (\emph{Artificial Intelligence of Things}) désigne la
+combinaison des technologies de l'intelligence artificielle, en particulier de
+l'apprentissage automatique, avec l'infrastructure de l'Internet des
+objets~\cite{zhang2021aiot}. L'objectif est de transformer les données
+collectées par les objets en informations exploitables (reconnaître une
+situation, détecter une anomalie, anticiper un événement) et, idéalement, de
+déclencher une action sans intervention humaine.
+
+L'IA peut être placée à différents endroits de l'architecture : dans le
+cloud, sur une passerelle ou un serveur de proximité (\emph{edge server}), ou
+directement dans l'objet (\emph{on-device AI}). L'AIoT recouvre l'ensemble de
+ces configurations ; ce qui la caractérise est le passage d'objets qui
+\emph{mesurent} à des systèmes qui \emph{comprennent} et \emph{décident}.
+
+\subsection{Pourquoi ajouter de l'IA aux objets connectés ?}
+
+Les règles fixes (\og si la température dépasse 80~°C, alors alarme\fg{})
+suffisent pour des phénomènes simples. Elles deviennent inadaptées lorsque le
+signal est complexe : reconnaître un mot prononcé, distinguer le bruit normal
+d'un roulement de celui d'un roulement usé, identifier un geste à partir d'un
+accéléromètre. Dans ces cas, il est très difficile d'écrire les règles à la
+main, alors qu'un modèle d'apprentissage automatique peut les apprendre à
+partir d'exemples. L'IA apporte ainsi aux systèmes IoT :
+\begin{itemize}
+  \item la \textbf{reconnaissance de motifs} dans des signaux bruités (audio,
+        vibrations, images) ;
+  \item la \textbf{détection d'anomalies}, c'est-à-dire l'identification
+        d'écarts par rapport à un comportement appris comme normal ;
+  \item la \textbf{prédiction} de l'évolution d'une grandeur (consommation,
+        usure, rendement) ;
+  \item l'\textbf{adaptation} au contexte et à l'utilisateur.
+\end{itemize}
+
+\subsection{Exemples d'utilisation}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\linewidth}{>{\bfseries}l X X}
+\toprule
+Domaine & Données collectées & Apport de l'IA \\
+\midrule
+Industrie      & Vibrations, courant, température des moteurs & Détection d'anomalies, maintenance prédictive \\
+Maison         & Son, présence, consommation électrique & Reconnaissance de mots-clés, automatisation \\
+Agriculture    & Humidité du sol, météo, images de feuilles & Irrigation optimisée, détection de maladies \\
+Santé          & Fréquence cardiaque, mouvements & Détection de chutes ou d'arythmies \\
+Transport      & Accélérations, images, données moteur & Aide à la conduite, surveillance du véhicule \\
+Environnement  & Sons de la forêt, qualité de l'air & Détection de tronçonneuses, alerte pollution \\
+\bottomrule
+\end{tabularx}
+\caption{Exemples d'applications de l'AIoT.}
+\label{tab:exemples-aiot}
+\end{table}
+
+Ces exemples, développés dans la partie~\ref{ch:benefices}, ont un point
+commun : la décision utile (\og anomalie\fg{}, \og mot-clé reconnu\fg{},
+\og chute\fg{}) représente une quantité d'information infime par rapport aux
+données brutes dont elle est issue. C'est précisément ce qui rend intéressante
+l'exécution du modèle au plus près du capteur.
+
+% ---------------------------------------------------------------------
+\section{Le TinyML : l'apprentissage automatique sur microcontrôleur}
+\label{sec:tinyml}
+
+\subsection{Définition}
+
+Le \textbf{TinyML} (\emph{Tiny Machine Learning}) désigne le domaine qui
+regroupe les technologies, matérielles et logicielles, permettant d'exécuter
+des modèles d'apprentissage automatique sur des appareils à très faibles
+ressources, typiquement des microcontrôleurs, avec une consommation de l'ordre
+du milliwatt ou moins~\cite{warden2019tinyml,banbury2020benchmarking}. Le
+terme a été popularisé en 2019 par l'ouvrage de Pete Warden et Daniel
+Situnayake~\cite{warden2019tinyml} et par la création de la communauté TinyML
+Foundation, devenue depuis EDGE~AI FOUNDATION~\cite{tinymlfoundation}.
+
+Le TinyML se situe à l'extrémité du continuum de l'IA embarquée, comme le
+montre le tableau~\ref{tab:spectre}. Là où un serveur dispose de dizaines de
+gigaoctets de mémoire et un smartphone de plusieurs gigaoctets, un
+microcontrôleur n'en possède que quelques centaines de kilooctets, soit un
+facteur de l'ordre de $10^5$.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\linewidth}{l X X X}
+\toprule
+ & \textbf{Cloud AI} & \textbf{Mobile / Edge AI} & \textbf{TinyML} \\
+\midrule
+Matériel        & Serveurs GPU/TPU & Smartphone, Raspberry Pi, Jetson & Microcontrôleur (ESP32, Arm Cortex-M) \\
+Mémoire vive    & Dizaines à centaines de Go & 1 à 16 Go & 32 Ko à quelques Mo \\
+Stockage        & To & Dizaines de Go & 256 Ko à quelques Mo de flash \\
+Puissance       & Centaines de watts & Quelques watts & Milliwatts \\
+Système         & Linux, conteneurs & Android, Linux & Pas d'OS ou RTOS (FreeRTOS) \\
+Coût unitaire   & Milliers d'euros & 50 à 500 € & 1 à 10 € \\
+Taille de modèle & Go & Dizaines de Mo & Ko à quelques centaines de Ko \\
+\bottomrule
+\end{tabularx}
+\caption{Positionnement du TinyML par rapport aux autres formes d'IA (ordres de grandeur, d'après~\cite{banbury2020benchmarking,lin2020mcunet}).}
+\label{tab:spectre}
+\end{table}
+
+\subsection{Les contraintes du TinyML}
+
+Concevoir une application TinyML revient à respecter simultanément plusieurs
+contraintes très fortes~\cite{banbury2020benchmarking,ray2022review} :
+
+\paragraph{La mémoire.} Un microcontrôleur dispose de deux types de mémoire.
+La \textbf{mémoire flash} (non volatile) stocke le programme et les poids du
+modèle ; la \textbf{SRAM} (volatile) contient les données de travail, en
+particulier les activations intermédiaires calculées pendant l'inférence. Les
+deux sont limitées : un modèle doit typiquement tenir dans quelques centaines de
+kilooctets de flash et ses activations dans quelques dizaines à centaines de
+kilooctets de SRAM. Lin \emph{et al.} montrent que c'est souvent la SRAM, plus
+encore que la flash, qui constitue le goulot d'étranglement~\cite{lin2020mcunet}.
+
+\paragraph{La puissance de calcul.} Les microcontrôleurs fonctionnent à des
+fréquences de quelques dizaines à quelques centaines de mégahertz, souvent sans
+unité de calcul flottant performante. Un réseau de neurones de quelques
+millions d'opérations est envisageable ; un modèle de plusieurs milliards
+d'opérations ne l'est pas.
+
+\paragraph{L'énergie.} Pour fonctionner des mois sur une pile, l'objet doit
+passer l'essentiel de son temps en veille et limiter la durée de chaque
+inférence. La consommation se mesure alors en milliwatts et l'énergie par
+inférence en microjoules ou millijoules~\cite{banbury2021mlperftiny}.
+
+\paragraph{L'environnement logiciel.} Pas de système d'exploitation complet,
+pas toujours d'allocation dynamique de mémoire, pas de Python : le modèle est
+compilé avec le micrologiciel (\emph{firmware}) en C/C++ et exécuté par un
+moteur d'inférence minimaliste comme TensorFlow Lite for Microcontrollers
+(TFLM)~\cite{david2021tflm}.
+
+\subsection{Entraînement et inférence : une séparation fondamentale}
+
+Il est essentiel de distinguer les deux phases de vie d'un modèle :
+\begin{itemize}
+  \item l'\textbf{entraînement}, qui consiste à ajuster les paramètres du modèle
+        à partir d'un grand nombre d'exemples. Il demande beaucoup de mémoire
+        et de calcul et s'effectue sur un ordinateur ou dans le cloud ;
+  \item l'\textbf{inférence}, qui consiste à appliquer le modèle déjà entraîné à
+        une nouvelle donnée pour obtenir une prédiction. C'est la seule phase
+        exécutée sur le microcontrôleur dans la grande majorité des systèmes
+        TinyML~\cite{david2021tflm}.
+\end{itemize}
+Entre les deux, le modèle doit être \textbf{optimisé} (réduit, quantifié) puis
+\textbf{converti} dans un format exécutable par le microcontrôleur. Ces étapes
+sont détaillées dans la partie~\ref{ch:principes}.
+
+\begin{aretenir}
+L'IoT connecte les objets, l'AIoT leur donne la capacité d'interpréter leurs
+données, et le TinyML pousse cette logique jusqu'aux plus petits composants :
+des microcontrôleurs à quelques euros, alimentés sur pile, qui exécutent
+localement un modèle entraîné ailleurs.
+\end{aretenir}
+
+% ---------------------------------------------------------------------
+\section{Fonctionnement d'une architecture AIoT/TinyML}
+\label{sec:archi}
+
+\subsection{La chaîne capteur -- microcontrôleur -- modèle -- action}
+
+Dans un système TinyML, le traitement suit une boucle locale composée de cinq
+étapes (figure~\ref{fig:boucle}) :
+
+\begin{enumerate}
+  \item \textbf{Acquisition} : le capteur mesure le phénomène (par exemple
+        l'accélération d'un moteur) et le microcontrôleur lit les échantillons
+        via un bus I\textsuperscript{2}C, SPI ou un convertisseur
+        analogique-numérique.
+  \item \textbf{Prétraitement} : les échantillons sont regroupés dans une
+        fenêtre temporelle (par exemple une seconde) puis transformés en
+        caractéristiques plus compactes : moyenne, écart-type, valeur efficace,
+        spectre par transformée de Fourier (FFT), coefficients MFCC pour l'audio.
+  \item \textbf{Inférence} : le vecteur de caractéristiques est fourni au modèle,
+        qui renvoie une prédiction (classe, score d'anomalie, valeur).
+  \item \textbf{Décision} : la prédiction est comparée à un seuil ou interprétée
+        par une règle simple.
+  \item \textbf{Action et communication} : l'objet agit (LED, relais, arrêt
+        d'urgence) et ne transmet au réseau que l'information utile, par exemple
+        un message MQTT \og anomalie détectée\fg{}.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=0.55cm]
+  \node[bloc, minimum width=2.2cm] (cap) {Capteur\\\footnotesize(accéléromètre)};
+  \node[bloc, minimum width=2.2cm, right=of cap] (pre) {Prétraitement\\\footnotesize(fenêtre, FFT)};
+  \node[blocv, minimum width=2.2cm, right=of pre] (inf) {Inférence\\\footnotesize(modèle TinyML)};
+  \node[blocv, minimum width=2.0cm, right=of inf] (dec) {Décision\\\footnotesize(seuil)};
+  \node[bloco, minimum width=2.0cm, right=of dec] (act) {Action\\\footnotesize(alerte, LED)};
+  \draw[fleche] (cap) -- (pre);
+  \draw[fleche] (pre) -- (inf);
+  \draw[fleche] (inf) -- (dec);
+  \draw[fleche] (dec) -- (act);
+  \begin{scope}[on background layer]
+    \node[draw=gris, dashed, rounded corners=6pt, fit=(pre)(inf)(dec), inner sep=8pt,
+          label={[font=\footnotesize\itshape,text=gris]below:dans le microcontrôleur (ESP32)}] {};
+  \end{scope}
+  \node[bloco, minimum width=2.6cm, above=1.1cm of act, xshift=-1.2cm] (cloud) {Cloud / tableau de bord\\\footnotesize(alertes uniquement)};
+  \draw[fleche, dashed] (act) -- node[right,font=\footnotesize]{MQTT} (cloud);
+\end{tikzpicture}
+\caption{Boucle de traitement locale d'un objet AIoT/TinyML.}
+\label{fig:boucle}
+\end{figure}
+
+Le listing~\ref{lst:boucle} montre, sous forme simplifiée, la structure du
+programme principal d'un ESP32 qui applique ce principe. Le modèle est
+interrogé à chaque fenêtre de mesures et seule une alerte est publiée.
+
+\begin{lstlisting}[language=C++, caption={Structure simplifiée de la boucle d'inférence sur ESP32.}, label={lst:boucle}]
+void loop() {
+  // 1. Acquisition : une fenêtre de 1 s à 1 kHz sur 3 axes
+  lire_accelerometre(fenetre, 1000);
+
+  // 2. Prétraitement : extraction de caractéristiques (RMS, FFT...)
+  calculer_caracteristiques(fenetre, entree_modele);
+
+  // 3. Inférence locale (TensorFlow Lite for Microcontrollers)
+  interpreter->Invoke();
+  float score = sortie_modele[0];
+
+  // 4-5. Décision et action : on ne transmet que l'événement utile
+  if (score > SEUIL_ANOMALIE) {
+    digitalWrite(LED_ALERTE, HIGH);
+    mqtt.publish("usine/moteur1/alerte", "anomalie");
+  }
+  esp_light_sleep_start();   // mise en veille jusqu'à la prochaine fenêtre
+}
+\end{lstlisting}
+
+\subsection{Comparaison avec une architecture centrée sur le cloud}
+
+Dans une architecture IoT classique, l'objet transmet en continu ses mesures
+brutes ; la passerelle les relaie vers le cloud, où le modèle est exécuté avant
+que la décision ne redescende éventuellement vers l'objet. Dans une architecture
+TinyML, l'inférence est réalisée dans l'objet et seules les décisions remontent.
+La figure~\ref{fig:cloud-vs-edge} compare les deux flux.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=0.9cm]
+  % ---- Architecture cloud
+  \node[font=\bfseries\small] (t1) at (0,0) {a) Architecture centrée sur le cloud};
+  \node[bloc, below=0.4cm of t1, xshift=-5cm, minimum width=2cm] (c1) {Capteur\\+ MCU};
+  \node[bloc, right=of c1, minimum width=2cm] (g1) {Passerelle};
+  \node[bloco, right=of g1, minimum width=2.4cm] (cl1) {Cloud\\(modèle IA)};
+  \node[bloc, right=of cl1, minimum width=2cm] (a1) {Décision\\/ action};
+  \draw[fleche, draw=orange, line width=1.6pt] (c1) -- node[above,font=\scriptsize]{brut} (g1);
+  \draw[fleche, draw=orange, line width=1.6pt] (g1) -- node[above,font=\scriptsize]{brut} (cl1);
+  \draw[fleche] (cl1) -- (a1);
+  \draw[fleche, dashed] (a1.south) -- ++(0,-0.45) -| node[pos=0.25,below,font=\scriptsize]{commande en retour (latence réseau)} (c1.south);
+
+  % ---- Architecture TinyML
+  \node[font=\bfseries\small, below=2.4cm of t1] (t2) {b) Architecture TinyML (inférence locale)};
+  \node[blocv, below=0.4cm of t2, xshift=-5cm, minimum width=2cm] (c2) {Capteur\\+ MCU\\+ modèle};
+  \node[blocv, right=of c2, minimum width=2cm] (a2) {Décision\\/ action\\locale};
+  \node[bloc, right=of a2, minimum width=2cm] (g2) {Passerelle};
+  \node[bloc, right=of g2, minimum width=2.4cm] (cl2) {Cloud\\(supervision)};
+  \draw[fleche] (c2) -- (a2);
+  \draw[fleche, draw=vert, line width=0.6pt] (a2) -- node[above,font=\scriptsize]{alerte} (g2);
+  \draw[fleche, draw=vert, line width=0.6pt] (g2) -- node[above,font=\scriptsize]{alerte} (cl2);
+\end{tikzpicture}
+\caption{Flux de données : architecture cloud (données brutes, flèches épaisses) et architecture TinyML (seules les alertes remontent).}
+\label{fig:cloud-vs-edge}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\linewidth}{>{\bfseries}l X X}
+\toprule
+Critère & Architecture cloud & Architecture TinyML \\
+\midrule
+Lieu de l'inférence      & Serveur distant & Microcontrôleur de l'objet \\
+Données transmises       & Mesures brutes, en continu & Résultats et alertes uniquement \\
+Latence de décision      & Dépend du réseau (de dizaines de ms à plusieurs secondes) & Quelques ms à quelques dizaines de ms, indépendante du réseau \\
+Fonctionnement hors ligne & Impossible & Possible pour les fonctions locales \\
+Confidentialité          & Données sensibles transférées et stockées à distance & Données brutes conservées dans l'objet \\
+Complexité des modèles   & Pratiquement illimitée & Fortement contrainte (Ko de mémoire) \\
+Mise à jour du modèle    & Simple (côté serveur) & Plus délicate (mise à jour du firmware, OTA) \\
+Coût récurrent           & Abonnement cloud, transfert de données & Faible, surtout lié à la supervision \\
+\bottomrule
+\end{tabularx}
+\caption{Comparaison entre une architecture centrée sur le cloud et une architecture TinyML.}
+\label{tab:cloud-vs-tinyml}
+\end{table}
+
+Les deux approches ne s'opposent pas nécessairement. Dans la pratique, les
+architectures AIoT sont souvent \textbf{hybrides} : l'objet filtre et
+interprète localement les données, une passerelle ou le cloud agrège les
+résultats de nombreux objets, réalise les analyses lourdes et ré-entraîne
+périodiquement les modèles, qui sont ensuite redéployés dans les objets. Cette
+complémentarité est discutée dans la partie~\ref{ch:limites}.
+
+\subsection{Le cas d'étude retenu}
+
+Pour illustrer concrètement ces principes, ce rapport s'appuie sur un exemple
+fil rouge : la \textbf{détection d'anomalies vibratoires sur un moteur}. Un
+accéléromètre (de type MPU6050 ou ADXL345) est fixé sur le carter du moteur et
+relié à un ESP32. Un petit modèle, entraîné sur ordinateur à partir de mesures
+en fonctionnement normal, est quantifié puis intégré au firmware. L'ESP32 analyse
+chaque seconde de vibrations et publie une alerte lorsque le comportement
+s'écarte de la normale. Ce scénario mobilise toutes les briques étudiées dans
+les parties suivantes : pipeline de développement, compression du modèle,
+matériel et outils, bénéfices et limites.

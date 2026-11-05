@@ -1,0 +1,494 @@
+% =====================================================================
+%  PARTIE 2 — Principes techniques du TinyML
+% =====================================================================
+\chapter{Principes techniques du TinyML}
+\label{ch:principes}
+
+\section{Introduction}
+
+La partie précédente a permis de définir le concept de TinyML et d'en
+identifier les enjeux fondamentaux. Cette partie examine les mécanismes
+techniques sous-jacents rendant possible l'exécution de modèles d'intelligence
+artificielle sur des dispositifs embarqués aux ressources limitées.
+
+La problématique centrale s'énonce ainsi : comment déployer un modèle
+d'apprentissage automatique, dont la taille peut atteindre plusieurs centaines
+de mégaoctets, sur un microcontrôleur disposant seulement de quelques centaines
+de kilooctets de mémoire vive ? La réponse repose sur trois piliers : un
+pipeline de développement rigoureusement structuré, l'application de techniques
+avancées de compression des modèles, et une exécution optimisée sur le matériel
+cible.
+
+% ---------------------------------------------------------------------
+\section{Pipeline de développement TinyML}
+
+Le TinyML ne consiste pas en l'entraînement direct des modèles sur le
+microcontrôleur. Le dispositif embarqué n'effectue qu'une seule opération :
+l'\textbf{inférence}, c'est-à-dire l'exécution d'un modèle préalablement
+entraîné et optimisé. L'intégralité des calculs intensifs s'effectue en amont,
+sur des stations de travail ou dans le cloud~\cite{warden2019tinyml}.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=0.45cm]
+  \node[bloc, minimum width=2.1cm] (a) {Collecte\\\footnotesize(données)};
+  \node[bloc, minimum width=2.1cm, right=of a] (b) {Prétraitement\\\footnotesize(nettoyage)};
+  \node[bloco, minimum width=2.1cm, right=of b] (c) {Entraînement\\\footnotesize(PC / cloud)};
+  \node[bloco, minimum width=2.1cm, right=of c] (d) {Optimisation\\\footnotesize(compression)};
+  \node[blocv, minimum width=2.1cm, below=1.1cm of d] (e) {Déploiement\\\footnotesize(\code{.tflite} $\to$ C)};
+  \node[blocv, minimum width=2.1cm, left=of e] (f) {Inférence\\\footnotesize(MCU)};
+  \node[blocv, minimum width=2.1cm, left=of f] (g) {Action\\\footnotesize(résultat)};
+  \draw[fleche] (a) -- (b);
+  \draw[fleche] (b) -- (c);
+  \draw[fleche] (c) -- (d);
+  \draw[fleche] (d) -- (e);
+  \draw[fleche] (e) -- (f);
+  \draw[fleche] (f) -- (g);
+  \begin{scope}[on background layer]
+    \node[draw=orange, dashed, rounded corners=6pt, fit=(a)(d), inner sep=6pt,
+          label={[font=\footnotesize\itshape,text=orange]above:sur ordinateur ou dans le cloud}] {};
+    \node[draw=vert, dashed, rounded corners=6pt, fit=(g)(e), inner sep=6pt,
+          label={[font=\footnotesize\itshape,text=vert]below:sur le microcontrôleur}] {};
+  \end{scope}
+\end{tikzpicture}
+\caption{Pipeline complet de développement TinyML.}
+\label{fig:pipeline}
+\end{figure}
+
+Le processus se décompose en cinq étapes séquentielles :
+\begin{enumerate}
+  \item \textbf{Collecte et préparation des données} : l'acquisition de données
+        représentatives constitue l'étape fondatrice. Les données proviennent
+        généralement des capteurs du dispositif final. Cette phase représente
+        une part majeure du temps total de développement, car la qualité d'un
+        modèle est directement dépendante de la qualité des données utilisées.
+  \item \textbf{Entraînement du modèle} : cette phase s'effectue sur des
+        machines dotées de ressources computationnelles importantes, utilisant
+        des frameworks tels que TensorFlow ou PyTorch. Le modèle produit est
+        généralement trop volumineux (plusieurs mégaoctets en Float32) pour les
+        contraintes des microcontrôleurs.
+  \item \textbf{Optimisation du modèle} : étape spécifique et critique du
+        TinyML, elle applique des techniques de compression (quantification,
+        élagage, distillation) pour réduire la taille tout en préservant les
+        performances. Le modèle est converti dans le format FlatBuffer de
+        TensorFlow Lite (\code{.tflite}).
+  \item \textbf{Intégration dans le firmware} : le modèle optimisé est intégré
+        au code embarqué sous forme de tableau d'octets statique stocké dans la
+        mémoire flash.
+  \item \textbf{Exécution de l'inférence} : le microcontrôleur exécute le modèle
+        sur les données acquises par ses capteurs, sans connexion réseau. Les
+        résultats déclenchent des actions locales.
+\end{enumerate}
+
+\textbf{Caractéristique fondamentale :} le modèle est figé au moment de la
+compilation. Le microcontrôleur n'effectue aucune forme d'apprentissage ; il
+applique les calculs définis.
+
+% ---------------------------------------------------------------------
+\section{Techniques de compression et d'optimisation des modèles}
+
+\subsection{Introduction à la compression}
+
+La compression des modèles représente un domaine essentiel pour le déploiement
+de l'IA sur dispositifs embarqués~\cite{sze2020efficient}. L'objectif consiste
+à réduire significativement la taille des modèles tout en minimisant la
+dégradation des performances. Cette réduction permet de respecter les
+contraintes mémorielles, d'améliorer l'efficacité énergétique et la vitesse
+d'exécution.
+
+Les techniques peuvent être classées en plusieurs catégories : quantification,
+réduction de complexité structurelle (élagage, distillation), factorisation et
+approches hybrides~\cite{han2016deep}.
+
+\subsection{La quantification (\emph{quantization})}
+
+\subsubsection{Définition et principes}
+
+La quantification est la technique de compression la plus répandue et la plus
+efficace en TinyML~\cite{jacob2018quantization,gholami2021survey}. Elle réduit
+la précision des représentations numériques des poids et des activations du
+réseau.
+
+\textbf{Contexte théorique :} en apprentissage classique, les réseaux
+manipulent des valeurs en virgule flottante 32~bits (Float32), offrant une
+grande précision mais au prix d'un espace mémoire important (4~octets par
+nombre). Dans l'embarqué, cette précision est généralement superflue.
+
+\textbf{Principe :} la quantification consiste à représenter les valeurs sur
+8~bits entiers (Int8), divisant par quatre la taille mémoire requise. Un modèle
+de 4~Mo en Float32 n'occupera plus que 1~Mo en Int8.
+
+\subsubsection{Mécanismes}
+
+La quantification implique un processus de mise en correspondance
+(\emph{mapping}) préservant l'information. Avant d'expliciter ce mécanisme, il
+est nécessaire de définir ce qu'est un \textbf{tenseur}.
+
+\paragraph{Qu'est-ce qu'un tenseur ?} En apprentissage automatique, un tenseur
+est une généralisation des matrices et des vecteurs à un nombre quelconque de
+dimensions. C'est la structure de données fondamentale utilisée pour
+représenter les poids, les activations et les données d'entrée dans les réseaux
+de neurones. Un tenseur d'ordre $n$ est un tableau à $n$ indices ; chaque
+élément est identifié par $n$ coordonnées $(i_1, i_2, \ldots, i_n)$.
+
+\begin{itemize}
+  \item \textbf{Ordre 0} (scalaire) : une simple valeur numérique, par exemple $3{,}14$ ;
+  \item \textbf{Ordre 1} (vecteur) : un tableau 1D, par exemple les biais d'une couche : $[0{,}2;\ -0{,}5;\ 1{,}3;\ 0{,}8]$ ;
+  \item \textbf{Ordre 2} (matrice) : un tableau 2D, comme les poids d'une couche entièrement connectée ;
+  \item \textbf{Ordre 3} : un cube de données, typiquement les activations d'une couche convolutionnelle avec plusieurs canaux ;
+  \item \textbf{Ordre 4} : les poids des couches convolutionnelles (hauteur $\times$ largeur $\times$ canaux d'entrée $\times$ canaux de sortie).
+\end{itemize}
+
+Dans le contexte du TinyML, les \textbf{poids} du réseau sont stockés sous forme
+de tenseurs (généralement d'ordre 2 ou 4), les \textbf{activations} (sorties
+intermédiaires de chaque couche) sont également des tenseurs, et la
+\textbf{quantification} s'applique à chaque tenseur individuellement, avec ses
+propres paramètres (\emph{scale} et \emph{zero\_point}).
+
+\paragraph{Formulation mathématique.} La relation fondamentale de la
+quantification affine s'exprime par~\cite{jacob2018quantization} :
+\begin{equation}
+  r \approx S \times (q - Z)
+  \label{eq:quant}
+\end{equation}
+où $r$ est la valeur réelle (Float32), $q$ la valeur quantifiée (entier Int8
+dans $[-128, 127]$), $S$ le facteur d'échelle (\emph{scale}, réel positif) et
+$Z$ le point zéro (\emph{zero\_point}, entier de même type que $q$).
+
+\paragraph{Processus détaillé.}
+\begin{enumerate}
+  \item \textbf{Analyse de la plage dynamique} : pour chaque tenseur, on
+        détermine les valeurs minimale et maximale ;
+  \item \textbf{Calcul des paramètres} : on calcule $S$ et $Z$ pour faire
+        correspondre la plage du tenseur à $[-128, 127]$ ;
+  \item \textbf{Application de la quantification} : chaque valeur est convertie
+        selon la formule~\eqref{eq:quant} inversée ;
+  \item \textbf{Exécution en arithmétique entière} : pendant l'inférence, les
+        multiplications se font en Int8 et les accumulations en Int32.
+\end{enumerate}
+
+\paragraph{Exemple détaillé.} Considérons un tenseur de poids d'une couche
+dense avec les valeurs suivantes (en Float32) :
+\[
+  W = [0{,}23;\ -0{,}45;\ 0{,}12;\ -0{,}87;\ 0{,}65;\ -0{,}33]
+\]
+
+\textit{Étape 1 -- Détermination de la plage :} $\min = -0{,}87$,
+$\max = 0{,}65$, d'où $\text{plage} = 0{,}65 - (-0{,}87) = 1{,}52$.
+
+\textit{Étape 2 -- Calcul du facteur d'échelle :} sur 8~bits, l'intervalle
+$[-128, 127]$ compte 255 pas :
+\[
+  S = \frac{\text{plage}}{255} = \frac{1{,}52}{255} \approx 0{,}0059608
+\]
+
+\textit{Étape 3 -- Calcul du point zéro :} on choisit $Z$ de sorte que la
+valeur minimale corresponde à $-128$ :
+\[
+  Z = -128 - \operatorname{round}\!\left(\frac{\min}{S}\right)
+    = -128 - \operatorname{round}(-145{,}95) = -128 + 146 = 18
+\]
+
+\textit{Étape 4 -- Quantification de chaque valeur :}
+\[
+  q_i = \operatorname{round}\!\left(\frac{w_i}{S}\right) + Z
+  \quad\Rightarrow\quad
+  W_q = [57;\ -57;\ 38;\ -128;\ 127;\ -37]
+\]
+Toutes les valeurs sont bien comprises dans l'intervalle Int8.
+
+\textit{Étape 5 -- Vérification par déquantification :} pour la première valeur,
+\[
+  r \approx 0{,}0059608 \times (57 - 18) = 0{,}0059608 \times 39 \approx 0{,}2325
+\]
+soit une erreur de $0{,}0025$ par rapport à la valeur d'origine $0{,}23$.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{rrrr}
+\toprule
+Valeur d'origine & Valeur quantifiée & Valeur déquantifiée & Erreur absolue \\
+\midrule
+$0{,}23$  & $57$   & $0{,}2325$  & $0{,}0025$ \\
+$-0{,}45$ & $-57$  & $-0{,}4471$ & $0{,}0029$ \\
+$0{,}12$  & $38$   & $0{,}1192$  & $0{,}0008$ \\
+$-0{,}87$ & $-128$ & $-0{,}8703$ & $0{,}0003$ \\
+$0{,}65$  & $127$  & $0{,}6497$  & $0{,}0003$ \\
+$-0{,}33$ & $-37$  & $-0{,}3278$ & $0{,}0022$ \\
+\bottomrule
+\end{tabular}
+\caption{Exemple de quantification Int8 d'un tenseur de six poids ($S \approx 0{,}0059608$, $Z = 18$).}
+\label{tab:quant-exemple}
+\end{table}
+
+\textbf{Conclusion de l'exemple :} l'erreur d'arrondi est toujours inférieure
+à $S/2 \approx 0{,}003$. Elle est généralement acceptable pour les réseaux de
+neurones : la perte de précision globale du modèle reste le plus souvent de
+l'ordre de 1 à 2~points~\cite{jacob2018quantization,krishnamoorthi2018}.
+
+\subsubsection{Avantages}
+\begin{itemize}
+  \item \textbf{Réduction de taille} : division par quatre de la taille des
+        poids. Pour un modèle de 20~Mo, cela représente une économie de 15~Mo.
+  \item \textbf{Amélioration des performances} : de nombreux microcontrôleurs
+        exécutent les opérations entières bien plus rapidement que les opérations
+        flottantes. Les opérations Int8 sont particulièrement efficaces sur les
+        architectures disposant d'instructions SIMD.
+  \item \textbf{Réduction de la consommation énergétique} : une addition 8~bits
+        entière consomme environ 30 fois moins d'énergie qu'une addition
+        flottante 32~bits, et une multiplication environ 18 fois
+        moins~\cite{horowitz2014energy}.
+  \item \textbf{Compatibilité avec le matériel} : de nombreux accélérateurs d'IA
+        (NPU) sont optimisés pour les calculs Int8.
+\end{itemize}
+
+\subsubsection{Méthodes de quantification}
+
+\textbf{Quantification post-entraînement (PTQ)} : convertit un modèle déjà
+entraîné. Rapide et simple, elle suffit dans la majorité des cas. La perte de
+précision est généralement inférieure à 1--2~\% pour la
+classification~\cite{krishnamoorthi2018}.
+
+\textbf{Quantification consciente de l'entraînement (QAT)} : intègre la
+quantification dès la phase d'entraînement via une \emph{fake quantization}.
+Elle permet d'atteindre des quantifications plus agressives (Int4, binaire)
+avec une meilleure préservation de la précision~\cite{jacob2018quantization}.
+
+\begin{lstlisting}[language=Python, caption={Quantification post-entraînement Int8 avec TensorFlow Lite.}, label={lst:ptq}]
+import tensorflow as tf
+
+converter = tf.lite.TFLiteConverter.from_saved_model(saved_model_dir)
+converter.optimizations = [tf.lite.Optimize.DEFAULT]
+# Jeu de données représentatif pour calibrer scale et zero_point
+converter.representative_dataset = generateur_donnees_representatives
+converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
+converter.inference_input_type = tf.int8
+converter.inference_output_type = tf.int8
+quantized_model = converter.convert()
+open("modele_int8.tflite", "wb").write(quantized_model)
+\end{lstlisting}
+
+\subsubsection{Limites et défis}
+\begin{itemize}
+  \item \textbf{Perte de précision} : généralement faible pour la
+        classification, elle peut être significative pour la détection d'objets
+        ou les opérations sensibles.
+  \item \textbf{Gestion des valeurs aberrantes} (\emph{outliers}) : les valeurs
+        extrêmes élargissent la plage et dégradent la résolution des autres.
+  \item \textbf{Solutions} : quantification par canal, écrêtage
+        (\emph{clipping}), utilisation de la QAT.
+  \item \textbf{Compatibilité} : certains opérateurs ne sont pas disponibles en
+        Int8 dans les moteurs d'inférence embarqués.
+\end{itemize}
+
+\subsubsection{Ordres de grandeur}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lcccc}
+\toprule
+Modèle & Taille Float32 & Taille Int8 & Perte de précision & Gain de vitesse \\
+\midrule
+MobileNetV1  & 16,9 Mo & 4,3 Mo  & $-0{,}8$ \% & $\times 3{,}2$ \\
+MobileNetV2  & 14,0 Mo & 3,5 Mo  & $-1{,}2$ \% & $\times 4{,}1$ \\
+InceptionV3  & 92,0 Mo & 23,0 Mo & $-1{,}5$ \% & $\times 2{,}8$ \\
+\bottomrule
+\end{tabular}
+\caption{Comparaison indicative des performances avant et après quantification Int8 (ordres de grandeur ; voir~\cite{krishnamoorthi2018,jacob2018quantization}).}
+\label{tab:bench-quant}
+\end{table}
+
+\subsection{L'élagage (\emph{pruning})}
+
+\subsubsection{Définition et motivation}
+
+L'élagage est une technique de compression structurelle qui supprime les
+connexions non essentielles~\cite{han2016deep}. Les réseaux entraînés
+contiennent de nombreuses connexions dont les poids sont proches de zéro et qui
+contribuent peu à la décision finale.
+
+\textbf{Origine biologique :} l'élagage s'inspire des mécanismes de plasticité
+synaptique, dans lesquels les connexions les moins utilisées sont éliminées.
+
+\subsubsection{Méthodologies}
+
+\textbf{Élagage non structuré :} suppression des poids individuellement en
+fonction de leur magnitude. Le taux de compression peut être très élevé
+(90--95~\%), mais il nécessite des formats de stockage creux spécifiques pour
+se traduire par un gain réel.
+
+\textbf{Élagage structuré :} suppression de blocs entiers (filtres, neurones,
+canaux). Il réduit effectivement le nombre d'opérations et reste compatible
+avec le matériel existant.
+
+\textbf{Algorithme typique :} (1) entraînement initial ; (2) tri des poids par
+magnitude ; (3) sélection des $N$~\% de poids les plus petits ; (4) mise à
+zéro ; (5) réentraînement court (\emph{fine-tuning}).
+
+\begin{lstlisting}[language=Python, caption={Élagage fondé sur un critère d'importance (approximation de Taylor).}, label={lst:pruning}]
+import numpy as np
+
+def taylor_pruning(weights, gradients, pruning_rate=0.5):
+    importance = np.abs(weights * gradients)
+    threshold = np.percentile(importance, pruning_rate * 100)
+    mask = importance > threshold
+    return weights * mask, mask
+\end{lstlisting}
+
+\subsubsection{Processus complet}
+
+Le processus enchaîne pré-entraînement, élagage (structuré ou non),
+\emph{fine-tuning} et itération progressive. \textbf{Stratégie
+recommandée :} plusieurs itérations avec des taux modérés (par exemple 20~\% à
+chaque itération) plutôt qu'une seule itération avec un taux élevé.
+
+\subsubsection{Résultats expérimentaux}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{cccc}
+\toprule
+Taux d'élagage & Précision & Perte & Réduction des paramètres \\
+\midrule
+20 \% & 70,9 \% & $-0{,}3$ \% & 20 \% \\
+40 \% & 70,1 \% & $-1{,}1$ \% & 40 \% \\
+60 \% & 68,5 \% & $-2{,}7$ \% & 60 \% \\
+80 \% & 65,2 \% & $-6{,}0$ \% & 80 \% \\
+\bottomrule
+\end{tabular}
+\caption{Impact indicatif de l'élagage sur la précision de MobileNetV1 (ImageNet).}
+\label{tab:pruning}
+\end{table}
+
+\subsection{La distillation (\emph{knowledge distillation})}
+
+\subsubsection{Concept}
+
+La distillation transfère les connaissances d'un modèle complexe (le
+\emph{professeur}) vers un modèle plus petit (l'\emph{élève}), permettant de
+créer des modèles compacts tout en conservant une grande partie des
+performances~\cite{hinton2015distilling}.
+
+\textbf{Analogie pédagogique :} un expert transmet non seulement les réponses
+finales, mais également son raisonnement à un élève.
+
+\subsubsection{Principe théorique}
+
+Le transfert de connaissances peut porter sur les sorties (\emph{output
+knowledge}), sur les représentations intermédiaires (\emph{intermediate
+knowledge}) ou sur les relations entre exemples (\emph{relation knowledge}).
+La fonction de perte combine deux termes :
+\begin{equation}
+  L_{\text{total}} = \alpha \, L_{\text{classification}} + \beta \, L_{\text{distillation}}
+\end{equation}
+Une \textbf{température} $T > 1$ est utilisée pour adoucir les distributions de
+probabilités produites par le professeur~\cite{hinton2015distilling} :
+\begin{equation}
+  P_i = \frac{\exp(z_i / T)}{\sum_j \exp(z_j / T)}
+\end{equation}
+
+\subsubsection{Méthodes}
+\begin{itemize}
+  \item \textbf{Distillation standard} : l'élève apprend à reproduire les sorties du professeur.
+  \item \textbf{Distillation par représentations intermédiaires} : l'élève apprend les représentations de plusieurs couches internes.
+  \item \textbf{Distillation mutuelle} : plusieurs élèves s'enseignent mutuellement.
+  \item \textbf{Auto-distillation} : un modèle enseigne à une version plus petite de lui-même.
+\end{itemize}
+
+\subsubsection{Résultats}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{llcccc}
+\toprule
+Professeur & Élève & Param. P & Param. E & Précision P & Précision E \\
+\midrule
+ResNet-152 & ResNet-18 & 60,2 M & 11,7 M & 78,3 \% & 74,8 \% \\
+ResNet-152 & MobileNet & 60,2 M & 4,2 M  & 78,3 \% & 71,3 \% \\
+\bottomrule
+\end{tabular}
+\caption{Comparaison indicative des performances (top-1 ImageNet) avant et après distillation ; M = millions de paramètres.}
+\label{tab:distillation}
+\end{table}
+
+\subsection{Combinaison des techniques}
+
+Les techniques sont complémentaires et sont généralement appliquées dans
+l'ordre suivant~\cite{han2016deep} : (1) distillation pour réduire la taille de
+l'architecture ; (2) élagage pour réduire la complexité ; (3) quantification
+pour réduire la précision numérique ; avec un \emph{fine-tuning} après chaque
+étape.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=0.5cm]
+  \node[bloco, minimum width=2.3cm] (m) {Modèle Float32\\\footnotesize(plusieurs Mo)};
+  \node[bloc, minimum width=2.1cm, right=of m] (d) {Distillation};
+  \node[bloc, minimum width=2.1cm, right=of d] (e) {Élagage\\+ \emph{fine-tuning}};
+  \node[bloc, minimum width=2.1cm, right=of e] (q) {Quantification\\Int8};
+  \node[blocv, minimum width=2.3cm, right=of q] (f) {Modèle TinyML\\\footnotesize(quelques dizaines de Ko)};
+  \draw[fleche] (m) -- (d);
+  \draw[fleche] (d) -- (e);
+  \draw[fleche] (e) -- (q);
+  \draw[fleche] (q) -- (f);
+\end{tikzpicture}
+\caption{Enchaînement typique des techniques de compression.}
+\label{fig:compression}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lccc}
+\toprule
+Méthode & Réduction de taille & Perte de précision & Gain de vitesse \\
+\midrule
+Quantification seule & $\times 4$         & $< 1$ \%     & $\times 2$ à $4$ \\
+Élagage seul         & $\times 5$ à $10$  & 2 à 5 \%     & $\times 1$ à $2$ \\
+Distillation seule   & $\times 10$ à $50$ & 3 à 8 \%     & $\times 1$ à $3$ \\
+Combinaison          & $\times 100$ à $300$ & 5 à 15 \%  & $\times 5$ à $15$ \\
+\bottomrule
+\end{tabular}
+\caption{Efficacité comparée des méthodes de compression (ordres de grandeur).}
+\label{tab:compression}
+\end{table}
+
+\subsection{Techniques avancées}
+\begin{itemize}
+  \item \textbf{Factorisation de matrices} : décomposition des matrices de poids
+        en produits de matrices de plus petites dimensions (SVD, rang faible).
+  \item \textbf{Binarisation} : représentation des poids et activations par des
+        valeurs binaires ($-1$ ou $+1$). La réduction de taille est extrême
+        ($\times 32$) mais la perte de précision importante.
+  \item \textbf{Réseaux creux} : utilisation de représentations creuses pour les
+        matrices de poids (formats COO, CSR).
+  \item \textbf{Recherche automatique d'architecture (NAS)} : conception
+        automatique de réseaux adaptés à l'embarqué, comme MobileNet,
+        EfficientNet ou MCUNet~\cite{lin2020mcunet}.
+\end{itemize}
+
+\subsection{Métriques d'évaluation}
+\begin{itemize}
+  \item \textbf{Taux de compression} : $\text{Taille}_{\text{originale}} / \text{Taille}_{\text{compressée}}$.
+  \item \textbf{Métriques de performance} : précision, latence, consommation énergétique, mémoire RAM et flash.
+  \item \textbf{Bancs d'essai} : ImageNet, CIFAR-10/100 et, pour l'embarqué, MLPerf Tiny~\cite{banbury2021mlperftiny}.
+\end{itemize}
+
+\subsection{Études de cas}
+\begin{itemize}
+  \item \textbf{Détection de mots-clés} : un modèle CNN de l'ordre du mégaoctet
+        peut être ramené à une centaine de kilooctets, avec une précision
+        supérieure à 90~\% et une latence de quelques dizaines de millisecondes
+        sur microcontrôleur~\cite{banbury2021mlperftiny}.
+  \item \textbf{Classification d'images} : des réseaux de type MobileNet ou
+        MCUNet, quantifiés en Int8, tiennent dans moins de 1~Mo et s'exécutent
+        sur des microcontrôleurs haut de gamme~\cite{lin2020mcunet}.
+  \item \textbf{Séries temporelles} (vibrations, capteurs inertiels) : de petits
+        réseaux denses ou auto-encodeurs de quelques dizaines de kilooctets
+        suffisent pour la détection d'anomalies, avec une latence de quelques
+        millisecondes sur ESP32 ; c'est le cas de notre exemple fil rouge.
+\end{itemize}

@@ -1,0 +1,213 @@
+% =====================================================================
+%  L'AIoT & TinyML : quand l'intelligence artificielle s'intègre
+%  dans les objets connectés
+%  Compilation : latexmk -pdf main.tex   (pdflatex + biber)
+% =====================================================================
+\documentclass[11pt,a4paper]{report}
+
+% ---------- Langue et encodage ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[autostyle=true]{csquotes}
+
+% ---------- Mise en page ----------
+\usepackage[a4paper,margin=2.2cm,headheight=14pt]{geometry}
+\usepackage{setspace}
+\setstretch{1.0}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\setlist{itemsep=2pt,topsep=4pt}
+
+% ---------- Maths, tableaux, figures ----------
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,backgrounds,calc}
+\usepackage[most]{tcolorbox}
+
+% ---------- Code ----------
+\usepackage{listings}
+
+% ---------- Bibliographie ----------
+\usepackage[backend=biber,style=numeric,sorting=nyt,defernumbers=true,maxbibnames=4,giveninits=true,url=true,doi=true]{biblatex}
+\addbibresource{references.bib}
+
+% ---------- Liens (en dernier) ----------
+\usepackage[hidelinks]{hyperref}
+\usepackage{bookmark}
+
+% =====================================================================
+%  Style
+% =====================================================================
+\definecolor{bleu}{RGB}{21,67,121}
+\definecolor{bleuclair}{RGB}{226,236,248}
+\definecolor{vert}{RGB}{35,120,70}
+\definecolor{vertclair}{RGB}{226,243,232}
+\definecolor{orange}{RGB}{200,100,20}
+\definecolor{orangeclair}{RGB}{252,236,220}
+\definecolor{gris}{RGB}{110,110,110}
+\definecolor{fondcode}{RGB}{246,246,246}
+
+% Titres de chapitres compacts
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\color{bleu}}
+  {\large\scshape Partie~\thechapter}
+  {4pt}
+  {\LARGE}[\vspace{2pt}{\color{bleu}\titlerule[1pt]}]
+\titlespacing*{\chapter}{0pt}{-20pt}{18pt}
+\titleformat{\section}{\normalfont\Large\bfseries\color{bleu}}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries\color{bleu!80!black}}{\thesubsection}{0.8em}{}
+\titleformat{\subsubsection}{\normalfont\normalsize\bfseries}{\thesubsubsection}{0.8em}{}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+
+% En-têtes et pieds de page
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{gris}AIoT \& TinyML}
+\fancyhead[R]{\small\color{gris}\nouppercase{\leftmark}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\chaptermark}[1]{\markboth{Partie~\thechapter.~#1}{}}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+% Listings
+\lstdefinestyle{code}{
+  backgroundcolor=\color{fondcode},
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{bleu}\bfseries,
+  commentstyle=\color{vert}\itshape,
+  stringstyle=\color{orange},
+  frame=single, rulecolor=\color{gray!50},
+  breaklines=true, showstringspaces=false,
+  numbers=left, numberstyle=\tiny\color{gris}, xleftmargin=1.5em,
+  columns=fullflexible, keepspaces=true,
+  literate={é}{{\'e}}1 {è}{{\`e}}1 {à}{{\`a}}1 {ê}{{\^e}}1 {ç}{{\c c}}1 {ô}{{\^o}}1 {î}{{\^i}}1 {É}{{\'E}}1
+}
+\lstset{style=code}
+\renewcommand{\lstlistingname}{Listing}
+
+% Encadrés
+\newtcolorbox{encadre}[1][]{colback=bleuclair,colframe=bleu,boxrule=0.6pt,arc=2pt,
+  left=6pt,right=6pt,top=4pt,bottom=4pt,fonttitle=\bfseries,#1}
+\newtcolorbox{aretenir}{colback=vertclair,colframe=vert,boxrule=0.6pt,arc=2pt,
+  left=6pt,right=6pt,top=4pt,bottom=4pt,title={À retenir},fonttitle=\bfseries}
+
+% Styles TikZ communs
+\tikzset{
+  bloc/.style={draw=bleu, fill=bleuclair, rounded corners=3pt, align=center,
+               minimum height=1cm, inner sep=4pt, font=\small},
+  blocv/.style={draw=vert, fill=vertclair, rounded corners=3pt, align=center,
+               minimum height=1cm, inner sep=4pt, font=\small},
+  bloco/.style={draw=orange, fill=orangeclair, rounded corners=3pt, align=center,
+               minimum height=1cm, inner sep=4pt, font=\small},
+  fleche/.style={-{Stealth[length=2.2mm]}, thick, draw=gris},
+}
+
+\newcommand{\code}[1]{\texttt{#1}}
+
+% =====================================================================
+\begin{document}
+
+% ---------------- Page de titre ----------------
+\begin{titlepage}
+  \centering
+  \vspace*{1cm}
+  {\large\scshape Module : Internet des Objets\par}
+  \vspace{0.4cm}
+  {\color{bleu}\rule{\linewidth}{1.2pt}\par}
+  \vspace{0.6cm}
+  {\Huge\bfseries\color{bleu} L'AIoT \& le TinyML\par}
+  \vspace{0.4cm}
+  {\LARGE Quand l'intelligence artificielle\\ s'intègre dans les objets connectés\par}
+  \vspace{0.6cm}
+  {\color{bleu}\rule{\linewidth}{1.2pt}\par}
+  \vspace{1.2cm}
+
+  \begin{tikzpicture}[node distance=1.6cm]
+    \node[bloc,minimum width=2.4cm] (c) {Capteur};
+    \node[blocv,minimum width=2.8cm,right=of c] (m) {Microcontrôleur\\+ modèle ML};
+    \node[bloco,minimum width=2.4cm,right=of m] (a) {Décision\\/ action};
+    \draw[fleche] (c) -- node[above,font=\footnotesize]{données} (m);
+    \draw[fleche] (m) -- node[above,font=\footnotesize]{inférence} (a);
+  \end{tikzpicture}
+
+  \vspace{1.8cm}
+  {\Large Rapport de veille documentaire\par}
+  \vspace{1.2cm}
+  {\large\bfseries Réalisé par :\par}
+  \vspace{0.2cm}
+  {\large Prénom NOM \quad·\quad Prénom NOM \quad·\quad Prénom NOM\par}
+  \vfill
+  {\large Année universitaire 2026--2027\par}
+\end{titlepage}
+
+% ---------------- Résumé ----------------
+\pagenumbering{roman}
+\chapter*{Résumé}
+\addcontentsline{toc}{chapter}{Résumé}
+\markboth{Résumé}{}
+
+L'Internet des objets (IoT) a permis de connecter des milliards de capteurs et
+d'actionneurs au réseau. Pendant longtemps, ces objets se sont contentés de
+mesurer puis de transmettre : l'analyse des données et la prise de décision
+étaient confiées à des serveurs distants, dans le cloud. L'\emph{Artificial
+Intelligence of Things} (AIoT) désigne la convergence de l'IoT et de
+l'intelligence artificielle, et le \emph{Tiny Machine Learning} (TinyML) en
+constitue la forme la plus contrainte : l'exécution de modèles d'apprentissage
+automatique directement sur des microcontrôleurs disposant de quelques centaines
+de kilooctets de mémoire et consommant quelques milliwatts.
+
+Ce rapport présente d'abord les notions d'IoT, d'AIoT et de TinyML, ainsi que
+l'architecture qui les relie. Il détaille ensuite les principes techniques qui
+rendent le TinyML possible (pipeline de développement, quantification, élagage,
+distillation), le matériel et les outils logiciels disponibles, puis les
+bénéfices, les domaines d'application, les limites et les perspectives de cette
+approche. Le fil conducteur est un cas d'usage concret : la détection d'anomalies
+de vibration sur un moteur à l'aide d'un ESP32.
+
+\textbf{Mots-clés :} Internet des objets, AIoT, TinyML, Edge AI, microcontrôleur,
+ESP32, quantification, inférence embarquée.
+
+\tableofcontents
+
+% ---------------- Introduction générale ----------------
+\clearpage
+\pagenumbering{arabic}
+\input{parties/introduction}
+
+% ---------------- Parties ----------------
+\input{parties/partie1_iot_aiot_tinyml}
+\input{parties/partie2_principes_techniques}
+\input{parties/partie3_materiel_outils}
+\input{parties/partie4_benefices_applications}
+\input{parties/partie5_limites_perspectives}
+
+% ---------------- Conclusion ----------------
+\input{parties/conclusion}
+
+% ---------------- Bibliographie ----------------
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliographie et webographie}
+\markboth{Bibliographie et webographie}{}
+\nocite{*}
+\printbibheading[title={Bibliographie et webographie}]
+\printbibliography[keyword=ouvrage,heading=subbibliography,title={Ouvrages de référence}]
+\printbibliography[keyword=article,heading=subbibliography,title={Articles scientifiques}]
+\printbibliography[keyword=rapport,heading=subbibliography,title={Normes, rapports et documentation technique}]
+\printbibliography[keyword=web,heading=subbibliography,title={Ressources en ligne et communautés}]
+
+\end{document}
