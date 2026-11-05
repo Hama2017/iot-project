@@ -124,7 +124,8 @@
 % ---------------- Page de titre ----------------
 \begin{titlepage}
   \centering
-  \vspace*{1cm}
+  \includegraphics[width=5.5cm]{images/logo_ulhn.png}\par
+  \vspace{1.2cm}
   {\large\scshape Module : Internet des Objets\par}
   \vspace{0.4cm}
   {\color{bleu}\rule{\linewidth}{1.2pt}\par}
@@ -134,23 +135,24 @@
   {\LARGE Quand l'intelligence artificielle\\ s'intègre dans les objets connectés\par}
   \vspace{0.6cm}
   {\color{bleu}\rule{\linewidth}{1.2pt}\par}
-  \vspace{1.2cm}
-
-  \begin{tikzpicture}[node distance=1.6cm]
-    \node[bloc,minimum width=2.4cm] (c) {Capteur};
-    \node[blocv,minimum width=2.8cm,right=of c] (m) {Microcontrôleur\\+ modèle ML};
-    \node[bloco,minimum width=2.4cm,right=of m] (a) {Décision\\/ action};
-    \draw[fleche] (c) -- node[above,font=\footnotesize]{données} (m);
-    \draw[fleche] (m) -- node[above,font=\footnotesize]{inférence} (a);
-  \end{tikzpicture}
-
-  \vspace{1.8cm}
+  \vspace{1.5cm}
   {\Large Rapport de veille documentaire\par}
-  \vspace{1.2cm}
-  {\large\bfseries Réalisé par :\par}
-  \vspace{0.2cm}
-  {\large Prénom NOM \quad·\quad Prénom NOM \quad·\quad Prénom NOM\par}
+  \vspace{2cm}
+  \begin{minipage}[t]{0.48\linewidth}
+    \raggedright
+    {\large\bfseries Réalisé par :\par}
+    \vspace{0.2cm}
+    {\large Hamadou BA\\ Mohamed SANOGO\\ Nicolas CHEVALIER\par}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.48\linewidth}
+    \raggedleft
+    {\large\bfseries Sous la direction de :\par}
+    \vspace{0.2cm}
+    {\large M. Claude DUVALLET\par}
+  \end{minipage}
   \vfill
+  {\large Université Le Havre Normandie\par}
+  \vspace{0.2cm}
   {\large Année universitaire 2026--2027\par}
 \end{titlepage}
 
